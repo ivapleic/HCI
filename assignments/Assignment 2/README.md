@@ -26,8 +26,8 @@
     
     Allows user to have personalized experience
     
-    - **UserProfile (photo, personal information)**
-    - **My Library (**books saved as **favourites,on the wishlist, history of reading**,… **)**
+    - **UserProfile** (photo, personal information)
+    - **My Library** (books saved as favourites,on the wishlist, history of reading,… )
     - **Recommendation** based on previous books that were saved
     
     **Browse books**
