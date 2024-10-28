@@ -3,15 +3,15 @@
 ## Project Tasks:
 
 1. **User personas**
-    1. **Persona 1: The Bookish Librarian**
+     **Persona 1: The Bookish Librarian**
         
         ![user-profile-1.png](user-profile-1.png)
         
-    2. **Persona 2: The Geek Programmer**
+     **Persona 2: The Geek Programmer**
         
         ![user-profile-2.png](user-profile-2.png)
         
-    3. **Persona 3: The Busy Mom**
+     **Persona 3: The Busy Mom**
         
         ![user-profile-3.png](user-profile-3.png)
         
