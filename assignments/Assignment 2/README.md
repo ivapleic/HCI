@@ -1,17 +1,15 @@
 # Assignment 2
-
 ## Project Tasks:
-
 1. **User personas**
-     **Persona 1: The Bookish Librarian**
+    1. **Persona 1: The Bookish Librarian**
         
         ![user-profile-1.png](user-profile-1.png)
         
-     **Persona 2: The Geek Programmer**
+    2. **Persona 2: The Geek Programmer**
         
         ![user-profile-2.png](user-profile-2.png)
         
-     **Persona 3: The Busy Mom**
+    3. **Persona 3: The Busy Mom**
         
         ![user-profile-3.png](user-profile-3.png)
         
@@ -41,5 +39,4 @@
     - **Searching by name of the book, author’s name, genre etc.**
     
 3. **Sitemap:** 
-
 ![Sitemap.png](Sitemap.png)
