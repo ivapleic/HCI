@@ -1,0 +1,28 @@
+nav {
+   border-bottom: #F2CAB3 1px solid;
+}
+
+.custom-input {
+     background-color: transparent;    
+    border: none;  
+    padding: 0.5rem;          
+    width: 16rem;             
+    border-radius: 0.375rem;  
+}
+
+.search-input-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: rgba(242, 202, 179, 0.3); 
+    align-items: center;
+    border-radius: 10px;
+    padding: 3px;
+}
+.login-button {
+    background-color: #593E2E;
+}
+
+.login-button:hover {
+    background-color: #8C6954;    
+}
