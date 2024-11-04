@@ -5,8 +5,8 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import "./Navbar.css";
 import Image from "next/image";
-import Logo from "C:/Users/Korisnik/Desktop/HCI/next-read-app/public/assets/Logo.png";
-import SearchIcon from "C:/Users/Korisnik/Desktop/HCI/next-read-app/public/assets/icons8-search-30.png";
+import Logo from "/assets/Logo.png";
+import SearchIcon from "/assets/icons8-search-30.png";
 
 
 

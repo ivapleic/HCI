@@ -1,5 +1,5 @@
 // app/book/[bookId]/page.js
-import BookImage from "C:/Users/Korisnik/Desktop/HCI/next-read-app/public/assets/icon-books.png";
+import BookImage from "/assets/icon-books.png";
 import Image from "next/image";
 import "./Register.css";
 
