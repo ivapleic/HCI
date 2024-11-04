@@ -8,10 +8,6 @@ import Image from "next/image";
 import Logo from "C:/Users/Korisnik/Desktop/HCI/next-read-app/public/assets/Logo.png";
 import SearchIcon from "C:/Users/Korisnik/Desktop/HCI/next-read-app/public/assets/icons8-search-30.png";
 
-type Page = {
-  title: string;
-  path: `/${string}`;
-};
 
 
 
