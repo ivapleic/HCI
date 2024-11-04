@@ -13,29 +13,7 @@ type Page = {
   path: `/${string}`;
 };
 
-const pages: Page[] = [
-  { title: "Home", path: "/" },
-  { title: "Login", path: "/auth/login" },
-  { title: "Register", path: "/auth/register" },
-  { title: "Profile", path: "/profile" },
-  { title: "My Books", path: "/book-lists" },
-  { title: "Search Books", path: "/search/query" },
-  { title: "Book Details", path: "/book" },
-  { title: "Author Details", path: "/author" }
-];
 
-function processPage(page: Page, index: number, pathname: string) {
-  return (
-    <li key={index}>
-      <Link
-        href={page.path}
-        className={pathname === page.path ? "font-extrabold" : ""}
-      >
-        {page.title}
-      </Link>
-    </li>
-  );
-}
 
 export default function Navbar() {
   const pathname = usePathname();
