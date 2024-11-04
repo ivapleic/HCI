@@ -1,5 +1,5 @@
 // app/book/[bookId]/page.js
-import BookImage from "/assets/icon-books.png";
+
 import Image from "next/image";
 import "./Register.css";
 
@@ -73,7 +73,9 @@ export default function RegisterPage() {
       {/* Desni dio - slika */}
       <div className="w-1/2 h-1/2  flex items-center justify-center">
         <Image
-          src={BookImage}
+          src="/assets/icon-books.png"
+          height={80}
+           width={80}
           alt="Register"
           className="object-cover h-80 w-full"
         />

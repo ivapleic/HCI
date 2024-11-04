@@ -5,13 +5,12 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import "./Navbar.css";
 import Image from "next/image";
-import Logo from "/assets/Logo.png";
-import SearchIcon from "/assets/icons8-search-30.png";
 
 
 
 
-export default function Navbar() {
+
+const Navbar = () => {
   const pathname = usePathname();
   const [searchInput, setSearchInput] = useState("");
   const [searchPath, setSearchPath] = useState("");
@@ -34,7 +33,7 @@ export default function Navbar() {
     <nav className="py-4 flex justify-between items-center px-6">
       {/* Logo */}
       <div className="flex items-center">
-        <Image src={Logo} alt="Logo" height={80} className="mr-2" />{" "}
+        <Image src="/assets/Logo.png" alt="Logo" height={80} width={80}  className="mr-2" />{" "}
       </div>
 
       {/* Linkovi */}
@@ -74,7 +73,7 @@ export default function Navbar() {
         {searchPath ? (
           <Link href={searchPath}>
             <Image
-              src={SearchIcon}
+              src="/assets/icons8-search-30.png"
               alt="Search"
               width={24}
               height={24}
@@ -84,7 +83,7 @@ export default function Navbar() {
           </Link>
         ) : (
           <Image
-            src={SearchIcon}
+            src="/assets/icons8-search-30.png"
             alt="Search"
             width={24}
             height={24}
@@ -111,6 +110,9 @@ export default function Navbar() {
           Prijava
         </Link>
       </div>
+
     </nav>
   );
 }
+
+export default Navbar;
