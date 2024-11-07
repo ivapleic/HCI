@@ -19,3 +19,17 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+
+* {
+  user-select: none;
+  outline: none; 
+}
+
+a, button, input, select, textarea {
+  pointer-events: auto;
+}
+
+div, span, img {
+  outline: none;
+}
