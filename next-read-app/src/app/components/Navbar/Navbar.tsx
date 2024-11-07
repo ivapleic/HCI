@@ -1,4 +1,3 @@
-import Image from "next/image";
 import DesktopNavbar from "./DesktopNavbar";
 import MobileNavbar from "./MobileNavbar";
 

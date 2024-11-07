@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import SearchBar from "../SearchBar/SearchBar";
+import Image from "next/image";
 
 const MobileNavbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -10,7 +11,7 @@ const MobileNavbar = () => {
     <div className="lg:hidden flex justify-between items-center w-full px-7 py-2"> 
       {/* Logo */}
       <div className="flex items-center">
-        <img src="/assets/Logo.png" alt="Logo" width={100} height={50} className="mr-2" />
+        <Image src="/assets/Logo.png" alt="Logo" width={100} height={50} className="mr-2" />
       </div>
 
       {/* Hamburger menu */}
