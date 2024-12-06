@@ -1,3 +1,5 @@
+/*
+
 import * as contentful from "contentful";
 import { Entry } from "contentful";
 
@@ -28,3 +30,5 @@ export const getAllUsers= async (): Promise<Entry<any>[]> => {
 
 
 export default { getAllGenres,getAllUsers };
+
+*/
