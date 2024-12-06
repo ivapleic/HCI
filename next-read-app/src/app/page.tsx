@@ -33,7 +33,7 @@ const HomePage = () => {
       <ul>
         {genres.map((genre) => (
           <li key={genre.sys.id}>
-             <h2>{genre.fields.name}</h2> 
+     
           </li>
         ))}
       </ul>
