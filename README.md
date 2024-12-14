@@ -26,7 +26,7 @@
 
 - Link to Assignment 1: [**Assignment 1**](https://github.com/ivapleic/HCI/tree/main/assignments/Assignment%201)
 - Link to Assignment 2: [**Assignment 2**](https://github.com/ivapleic/HCI/tree/main/assignments/Assignment%202) 
-- Link to Assignment 3: [**Assignment 4**](https://github.com/ivapleic/HCI/tree/main/assignments/Assignment%204)
+- Link to Assignment 4: [**Assignment 4**](https://github.com/ivapleic/HCI/tree/main/assignments/Assignment%204)
 <!-- Add more assignments as necessary -->
 
 ## Project Requirements
