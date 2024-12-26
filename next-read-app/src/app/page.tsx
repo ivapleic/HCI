@@ -1,27 +1,31 @@
-"use client";
+"use client"
 
-import Image from "next/image";
 import React, { useEffect, useRef } from "react";
+import Image from "next/image";
 
 const HomePage = () => {
-  const scrollersRef = useRef(null);
+  // Tipizacija useRef kao HTMLElement | null
+  const scrollersRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const scrollers = scrollersRef.current?.querySelectorAll(".scroller") || [];
+    // Proveravamo da li scrollersRef.current nije null i da li querySelectorAll vraća vrednost
+    const scrollers = scrollersRef.current?.querySelectorAll(".scroller");
 
-    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      addAnimation(scrollers);
+    // Proveravamo da li je scrollers definisano i da li nije prazan niz
+    if (scrollers && scrollers.length > 0 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      addAnimation(scrollers);  // Pozivamo funkciju addAnimation
     }
   }, []);
 
-  function addAnimation(scrollers:NodeListOf<HTMLElement>) {
-    scrollers.forEach((scroller: HTMLElement) => {
+  function addAnimation(scrollers: NodeListOf<Element>) {
+    // Prolazimo kroz sve skrolere
+    scrollers.forEach((scroller) => {
       scroller.setAttribute("data-animated", "true");
 
       const scrollerInner = scroller.querySelector(".scroller__inner") as HTMLElement;
       const scrollerContent = Array.from(scrollerInner.children) as HTMLElement[];
-  
-      scrollerContent.forEach((item: HTMLElement) => {
+
+      scrollerContent.forEach((item) => {
         const duplicatedItem = item.cloneNode(true) as HTMLElement;
         duplicatedItem.setAttribute("aria-hidden", "true");
         scrollerInner.appendChild(duplicatedItem);
@@ -32,7 +36,7 @@ const HomePage = () => {
   return (
     <main
       ref={scrollersRef}
-      className="flex items-center  min-h-screen flex-col p-10 bg-[#F2F2F2]"
+      className="flex items-center min-h-screen flex-col p-10 bg-[#F2F2F2]"
     >
       {/* Books Scroller */}
       <div className="top-books-scroller w-full max-w-screen-2xl border-b-[0.5px] border-[#F2CAB3]">
@@ -41,7 +45,7 @@ const HomePage = () => {
         </p>
 
         <div
-          className="scroller mx-4 sm:mx-6 lg:mx-8 "
+          className="scroller mx-4 sm:mx-6 lg:mx-8"
           data-direction="left"
           data-speed="slow"
         >
