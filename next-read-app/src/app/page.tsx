@@ -18,7 +18,7 @@ const HomePage = () => {
     scrollers.forEach((scroller: any) => {
       scroller.setAttribute("data-animated", "true");
 
-      let scrollerInner = scroller.querySelector(".scroller__inner");
+      const scrollerInner = scroller.querySelector(".scroller__inner");
       const scrollerContent = Array.from(scrollerInner.children);
 
       scrollerContent.forEach((item: any) => {
