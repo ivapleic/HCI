@@ -14,15 +14,15 @@ const HomePage = () => {
     }
   }, []);
 
-  function addAnimation(scrollers: any) {
-    scrollers.forEach((scroller: any) => {
+  function addAnimation(scrollers:NodeListOf<HTMLElement>) {
+    scrollers.forEach((scroller: HTMLElement) => {
       scroller.setAttribute("data-animated", "true");
 
-      const scrollerInner = scroller.querySelector(".scroller__inner");
-      const scrollerContent = Array.from(scrollerInner.children);
-
-      scrollerContent.forEach((item: any) => {
-        const duplicatedItem = item.cloneNode(true);
+      const scrollerInner = scroller.querySelector(".scroller__inner") as HTMLElement;
+      const scrollerContent = Array.from(scrollerInner.children) as HTMLElement[];
+  
+      scrollerContent.forEach((item: HTMLElement) => {
+        const duplicatedItem = item.cloneNode(true) as HTMLElement;
         duplicatedItem.setAttribute("aria-hidden", "true");
         scrollerInner.appendChild(duplicatedItem);
       });
