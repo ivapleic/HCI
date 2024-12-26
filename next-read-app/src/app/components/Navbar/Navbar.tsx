@@ -3,9 +3,9 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "../Logo/Logo"; // Zamijeni svojim logotipom ako je potrebno
-import { cn } from "@/app/lib/utils"; // Utility funkcija za kombiniranje klasa
-import { useClickOutside } from "@/app/hooks/useClickOutside"; // Hook za zatvaranje izvan elemenata
+import Logo from "../Logo/Logo"; 
+import { cn } from "@/app/lib/utils"; 
+import { useClickOutside } from "@/app/hooks/useClickOutside";
 import SearchBar from "../SearchBar/SearchBar";
 
 // Definirane stranice navigacije
@@ -24,7 +24,6 @@ type HamburgerProps = {
   toggleMenu: () => void;
 };
 
-// Komponenta za hamburger meni
 function Hamburger({ isOpen, toggleMenu }: HamburgerProps) {
   return (
     <button
@@ -51,7 +50,7 @@ function Hamburger({ isOpen, toggleMenu }: HamburgerProps) {
   );
 }
 
-// Funkcija za prikaz stranica u navigaciji
+
 function processPage(
   page: Page,
   index: number,
@@ -64,26 +63,18 @@ function processPage(
       <Link href={page.path} onClick={onClick}>
         <span
           className={cn(
-            "px-4 py-2 text-sm", // Osnovni stilovi
+            "border rounded-sm border-transparent px-4 py-2 whitespace-nowrap",
             {
-              // Aktivni linkovi u desktop verziji
-              "text-[#593E2E] sm:border-b-2 sm:border-[#593E2E] sm:hover:text-[#593E2E]":
-                isActive, // Samo za desktop
-              "sm:border-b-0": !isActive, // Nema border-a za neaktivne linkove na desktopu
-              "sm:hover:text-[#593E2E]": !isActive, // Hover efekat samo za desktop
-              // Stilovi za mobilnu verziju
-              "text-gray-800": !isActive, // Non-active links na mobilnoj verziji
-              "sm:hidden": false, // Mobilni linkovi nisu skriveni na mobilnim uređajima
+              "hover:text-white": !isActive,
+              "border rounded-sm":
+                isActive,
             }
           )}
         >
           {page.title}
         </span>
       </Link>
-      {/* Trokut za aktivne linkove  */}
-      {isActive && (
-        <div className="absolute left-1/2 transform -translate-x-1/2 -top-4 w-0 h-0 border-l-[6px] border-r-[6px] border-t-[6px] border-transparent border-t-[#593E2E]"></div>
-      )}
+    
     </li>
   );
 }

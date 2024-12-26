@@ -11,7 +11,7 @@ interface RegisterModalProps {
 const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <h1 className="text-3xl font-bold mb-5 text-[#593E2E] text-center">Register</h1>
+      <h1 className="text-3xl font-bold mb-5 text-[#593E2E] text-center">Join Us !</h1>
       <form className="space-y-4">
         <div>
           <label
@@ -25,7 +25,7 @@ const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
             name="fullName"
             type="text"
             placeholder="Enter your full name"
-            className="w-full border rounded-lg p-2 bg-white text-[#593E2E]"
+            className="w-full border rounded-lg p-2 bg-white"
           />
         </div>
         <div>
@@ -40,7 +40,7 @@ const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
             name="email"
             type="email"
             placeholder="Enter your email"
-            className="w-full border rounded-lg p-2 bg-white text-[#593E2E]"
+            className="w-full border rounded-lg p-2 bg-white"
           />
         </div>
         <div>
@@ -55,7 +55,7 @@ const RegisterModal = ({ isOpen, onClose }: RegisterModalProps) => {
             name="password"
             type="password"
             placeholder="Enter your password"
-            className="w-full border rounded-lg p-2 bg-white text-[#593E2E] mb-4"
+            className="w-full border rounded-lg p-2 bg-white mb-4"
           />
         </div>
         <button

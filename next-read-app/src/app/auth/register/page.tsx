@@ -10,7 +10,7 @@ const RegisterPage = () => {
 
   const handleClose = () => {
     setIsOpen(false);
-    router.back(); // Vrati korisnika na prethodnu stranicu
+    router.back(); 
   };
 
   useEffect(() => {
