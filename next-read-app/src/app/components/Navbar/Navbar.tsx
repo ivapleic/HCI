@@ -65,7 +65,7 @@ function processPage(
           className={cn(
             "border rounded-sm border-transparent px-4 py-2 whitespace-nowrap",
             {
-              "hover:text-white": !isActive,
+              "": !isActive,
               "border rounded-sm":
                 isActive,
             }
@@ -92,7 +92,7 @@ export function Navbar() {
 
   return (
     <nav
-      className="py-4 px-6 border-b border-gray-300 bg-white sticky top-0 z-10"
+      className="py-6 px-6 border-b border-gray-300 bg-white sticky top-0 z-10"
       ref={navRef}
     >
       <div className="container mx-auto flex justify-between items-center">
