@@ -4,8 +4,8 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo"; 
-import { cn } from "@/app/lib/utils"; 
-import { useClickOutside } from "@/app/hooks/useClickOutside";
+import { cn } from "@/lib/utils"; 
+import { useClickOutside } from "@/hooks/useClickOutside";
 import SearchBar from "../SearchBar/SearchBar";
 
 // Definirane stranice navigacije
@@ -63,16 +63,16 @@ function processPage(
      <Link href={page.path} onClick={onClick}>
         <span
           className={cn(
-            "px-4 py-2 text-sm", // Osnovni stilovi
+            "px-4 py-2 text-sm", 
             {
-              // Aktivni linkovi u desktop verziji
+            
               "text-[#593E2E] sm:border-b-2 sm:border-[#593E2E] sm:hover:text-[#593E2E]":
-                isActive, // Samo za desktop
-              "sm:border-b-0": !isActive, // Nema border-a za neaktivne linkove na desktopu
-              "sm:hover:text-[#593E2E]": !isActive, // Hover efekat samo za desktop
-              // Stilovi za mobilnu verziju
-              "text-gray-800": !isActive, // Non-active links na mobilnoj verziji
-              "sm:hidden": false, // Mobilni linkovi nisu skriveni na mobilnim uređajima
+                isActive, 
+              "sm:border-b-0": !isActive, 
+              "sm:hover:text-[#593E2E]": !isActive, 
+            
+              "text-gray-800": !isActive, 
+              "sm:hidden": false, 
             }
           )}
         >
@@ -84,7 +84,6 @@ function processPage(
   );
 }
 
-// Glavna navigacijska komponenta
 export function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -137,22 +136,20 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Hamburger meni za mobilne uređaje */}
+        {/* Hamburger meni za mobitel */}
         <Hamburger isOpen={isMenuOpen} toggleMenu={toggleMenu} />
       </div>
 
       {/* Mobilna navigacija */}
       <ul
         className={cn(
-          "absolute top-full left-0 w-full bg-white flex flex-col items-center space-y-4 py-6 border-t border-gray-300 sm:hidden", // Ovdje koristimo sm:hidden da bismo sakrili meni na desktopu
+          "absolute top-full left-0 w-full bg-white flex flex-col items-center space-y-4 py-6 border-t border-gray-300 sm:hidden",
           { hidden: !isMenuOpen }
         )}
       >
         {pages.map((page, index) =>
-          // Mobilni meni ne koristi aktivne stilove
           processPage(page, index, pathname, closeMenu)
         )}
-        {/* Dodaj mobilnu verziju za login/register u mobilnoj verziji */}
         <li className="flex flex-col space-y-4 w-full">
           <Link
             href="/auth/register"
@@ -168,7 +165,6 @@ export function Navbar() {
           </Link>
         </li>
 
-        {/* Pretraga u mobilnom meniju */}
         <div className="w-full px-4 flex justify-center">
           <SearchBar onSearchPath={() => {}} />
         </div>

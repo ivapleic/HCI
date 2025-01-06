@@ -45,14 +45,12 @@ export interface TypeBookFields {
   }
   
   
-  // Skeletons for Contentful types (basic structure without actual data)
 export type TypeBookSkeleton = EntrySkeletonType<TypeBookFields, "book">;
 export type TypeAuthorSkeleton = EntrySkeletonType<TypeAuthorFields, "author">;
 export type TypeGenreSkeleton = EntrySkeletonType<TypeGenreFields, "genre">;
 export type TypeUserSkeleton = EntrySkeletonType<TypeUserFields, "user">;
 export type TypeListSkeleton = EntrySkeletonType<TypeListFields, "list">;
 
-// Entry types to handle actual data from Contentful (using Entry)
 export type TypeBook<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeBookSkeleton, Modifiers, Locales>;
 export type TypeAuthor<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeAuthorSkeleton, Modifiers, Locales>;
 export type TypeGenre<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeGenreSkeleton, Modifiers, Locales>;

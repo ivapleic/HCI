@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getGenreList } from "../lib/api"; // Importirajte funkciju za dohvat žanrova
+import { getGenreList } from "@/lib/api"; // Importirajte funkciju za dohvat žanrova
 
 const GenresPage = () => {
   const [genres, setGenres] = useState<any[]>([]); // State za spremanje žanrova

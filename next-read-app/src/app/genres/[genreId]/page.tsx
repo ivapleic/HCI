@@ -2,29 +2,46 @@
 
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getGenreById, getListsByGenre } from "@/app/lib/api";
+import { getGenreById, getListsByGenre } from "@/lib/api";
 import { useState, useEffect } from "react";
+import { Genre,Book,List } from "../_lib/api";
+import { TypeGenreSkeleton } from "@/content-types";
+import { TypeGenreFields } from "@/content-types";
 
 type GenrePageProps = {
   params: { genreId: string };
 };
 
 export default function GenrePage({ params }: GenrePageProps) {
-  const [genre, setGenre] = useState<any>(null);
+  const [genre, setGenre] = useState<TypeGenreFields  | null>(null);
   const [lists, setLists] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
         const genreData = await getGenreById(params.genreId);
+
         if (!genreData) {
           notFound();
           return;
         }
-        setGenre(genreData);
 
+
+          // Provjeri je li Name dostupan na "en-US" jeziku
+          const genreName = genreData.fields.Name["en-US"]; // Pristupi "Name" iz "en-US" jezika
+
+          // Ako želiš i "Description", možeš to isto učiniti:
+          const genreDescription = genreData.fields.Description["en-US"];
+  
+          setGenre({
+            Name: genreName,
+            Description: genreDescription,
+          });
+        
         const listsData = await getListsByGenre(params.genreId);
         setLists(listsData);
         console.log("Fetched Lists:", listsData);
@@ -53,12 +70,6 @@ export default function GenrePage({ params }: GenrePageProps) {
   return (
     <main className="flex min-h-screen flex-col items-center p-10 bg-gray-50">
       <article className="w-full max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden p-6">
-        <Link
-          href="/genres"
-          className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200 mb-6"
-        >
-          {/* Link za povratak na popis žanrova */}
-        </Link>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
           {name}
         </h1>
@@ -79,7 +90,6 @@ export default function GenrePage({ params }: GenrePageProps) {
                     {list.fields.name}
                   </h3>
 
-                  {/* Prikazivanje imena knjige */}
                   {list.fields.books && list.fields.books.length > 0 ? (
                     <div className="space-y-4">
                       {list.fields.books.map((book: any, bookIndex: number) => (

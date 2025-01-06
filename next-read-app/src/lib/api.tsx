@@ -28,7 +28,6 @@ export const getGenreList = async () => {
   }
 };
 
-// Funkcija koja dohvaća specifičan žanr prema njegovom ID-u
 export const getGenreById = async (genreId: string) => {
   try {
     const data =
@@ -58,7 +57,7 @@ export const getListsByGenre = async (genreId: string) => {
       select: ["fields"],
     });
 
-    console.log("All data items:", data.items);  // Ispisivanje svih podataka
+    console.log("All data items:", data.items);  
 
     // ZASTO OVO NE RADI???
 
@@ -67,11 +66,11 @@ export const getListsByGenre = async (genreId: string) => {
      // );
     
 
-    // console.log("Filtered Lists:", filteredItems);  // Log za filtrirane rezultate
-    return data.items;  // Vraćanje filtrirane liste
+    // console.log("Filtered Lists:", filteredItems);  
+    return data.items; 
   } catch (error) {
     console.error("Error fetching lists by genre:", error);
-    return [];  // Ako dođe do greške, vraćamo prazan niz
+    return [];  
   }
 };
 
