@@ -60,14 +60,19 @@ function processPage(
   const isActive = pathname === page.path;
   return (
     <li key={index} className="relative">
-      <Link href={page.path} onClick={onClick}>
+     <Link href={page.path} onClick={onClick}>
         <span
           className={cn(
-            "border rounded-sm border-transparent px-4 py-2 whitespace-nowrap",
+            "px-4 py-2 text-sm", // Osnovni stilovi
             {
-              "": !isActive,
-              "border rounded-sm":
-                isActive,
+              // Aktivni linkovi u desktop verziji
+              "text-[#593E2E] sm:border-b-2 sm:border-[#593E2E] sm:hover:text-[#593E2E]":
+                isActive, // Samo za desktop
+              "sm:border-b-0": !isActive, // Nema border-a za neaktivne linkove na desktopu
+              "sm:hover:text-[#593E2E]": !isActive, // Hover efekat samo za desktop
+              // Stilovi za mobilnu verziju
+              "text-gray-800": !isActive, // Non-active links na mobilnoj verziji
+              "sm:hidden": false, // Mobilni linkovi nisu skriveni na mobilnim uređajima
             }
           )}
         >
