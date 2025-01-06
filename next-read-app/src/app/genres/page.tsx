@@ -27,20 +27,21 @@ const GenresPage = () => {
   console.log(genres);
 
   return (
-    <div className="w-full max-w-screen-2xl my-6">
-      <p className="text-3xl text-[#593E2E] tracking-tight text-left mb-8">
+    <div className="w-full max-w-screen-2xl my-6 px-6">
+      <h1 className="text-3xl text-[#593E2E] font-bold tracking-tight text-left mb-8">
         Browse All Genres
-      </p>
+      </h1>
 
       {loading ? (
-        <div>Loading genres...</div> // Prikazujemo loading dok se žanrovi učitavaju
+        <div className="text-center text-lg">Loading genres...</div> // Prikazujemo loading dok se žanrovi učitavaju
       ) : (
-        <div className="grid grid-cols-2 gap-6">
+        <div className="space-y-4">
+          {/* Prikazivanje žanrova kao lista */}
           {genres.map((genre: any) => (
             <Link key={genre.sys.id} href={`/genres/${genre.sys.id}`}>
-              <p>
-                {genre.fields.name} {/* Prikazivanje imena žanra */}
-              </p>
+              <div className="p-4 my-8 bg-gray-100 rounded-md shadow-md hover:bg-gray-200 transition-all">
+                <h3 className="text-xl font-semibold text-gray-800">{genre.fields.name}</h3>
+              </div>
             </Link>
           ))}
         </div>

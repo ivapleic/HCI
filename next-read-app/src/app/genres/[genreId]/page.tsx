@@ -1,41 +1,108 @@
+"use client";
+
 import Link from "next/link";
-import { notFound } from "next/navigation"; // Ovaj dio koristi Next.js funkcionalnost za prikazivanje stranice 404 ako žanr nije pronađen
-import { getGenreById } from "@/app/lib/api"; // Importirajte funkciju za dohvat žanra prema ID-u
+import { notFound } from "next/navigation";
+import { getGenreById, getListsByGenre } from "@/app/lib/api";
+import { useState, useEffect } from "react";
 
 type GenrePageProps = {
-  params: { genreId: string }; // Parametar za ID žanra u URL-u
+  params: { genreId: string };
 };
 
-export const metadata = {
-  title: "Genre Details", // Metapodaci za stranicu (možete promijeniti)
-};
+export default function GenrePage({ params }: GenrePageProps) {
+  const [genre, setGenre] = useState<any>(null);
+  const [lists, setLists] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
-async function getGenre(id: string) {
-  // Funkcija koja poziva Contentful API za dohvat žanra prema ID-u
-  const genre = await getGenreById(id);
-  return genre;
-}
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const genreData = await getGenreById(params.genreId);
+        if (!genreData) {
+          notFound();
+          return;
+        }
+        setGenre(genreData);
 
-export default async function GenrePage({ params }: GenrePageProps) {
-  const genre = await getGenre(params.genreId); // Dohvati žanr na temelju ID-a iz URL-a
-  if (!genre) {
-    notFound(); // Ako žanr ne postoji, prikazujemo 404 stranicu
+        const listsData = await getListsByGenre(params.genreId);
+        setLists(listsData);
+        console.log("Fetched Lists:", listsData);
+      } catch (error) {
+        console.error("Error fetching genre or lists:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [params.genreId]);
+
+  if (loading) {
+    return <p>Loading...</p>;
   }
 
-  const { name, description } = genre.fields; // Izdvajamo podatke žanra (prema Contentful strukturi)
+  if (!genre) {
+    notFound();
+  }
+
+  console.log("Fetched Lists:", lists);
+
+  const { name, description } = genre.fields;
 
   return (
-    <main className="flex min-h-screen flex-col items-center p-10">
+    <main className="flex min-h-screen flex-col items-center p-10 bg-gray-50">
       <article className="w-full max-w-2xl bg-white shadow-lg rounded-lg overflow-hidden p-6">
         <Link
-          href="/genres" // Povratak na popis svih žanrova
+          href="/genres"
           className="inline-flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200 mb-6"
         >
+          {/* Link za povratak na popis žanrova */}
         </Link>
         <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight text-gray-900 mb-4">
-          {name} {/* Prikaz imena žanra */}
+          {name}
         </h1>
-        <p>{description}</p> {/* Prikaz opisa žanra */}
+        <p className="text-gray-700">{description}</p>
+
+        <div className="mt-10">
+          <h2 className="text-xl font-bold mb-4 text-gray-900">
+            Lists under this Genre:
+          </h2>
+          {lists && lists.length > 0 ? (
+            <div className="space-y-6">
+              {lists.map((list: any, index: number) => (
+                <div
+                  key={index}
+                  className="p-4 bg-gray-100 rounded-lg shadow-sm"
+                >
+                  <h3 className="text-lg font-semibold text-red-800 mb-4">
+                    {list.fields.name}
+                  </h3>
+
+                  {/* Prikazivanje imena knjige */}
+                  {list.fields.books && list.fields.books.length > 0 ? (
+                    <div className="space-y-4">
+                      {list.fields.books.map((book: any, bookIndex: number) => (
+                        <div
+                          key={bookIndex}
+                          className="p-2 bg-white rounded-md shadow-sm"
+                        >
+                          <h4 className="font-medium text-gray-700">
+                            {book.fields.title}
+                          </h4>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-gray-600">No books in this list.</p>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-600">No lists available for this genre.</p>
+          )}
+        </div>
       </article>
     </main>
   );

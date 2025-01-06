@@ -13,11 +13,11 @@ const HomePage = () => {
   const fetchGenres = async () => {
     try {
       const data = await getGenreList();
-      setGenres(data); // Postavite žanrove u state
+      setGenres(data); 
     } catch (error) {
       console.error("Error fetching genres:", error);
     } finally {
-      setLoading(false); // Postavite loading na false kada se podaci učitaju
+      setLoading(false);
     }
   };
 
@@ -35,7 +35,7 @@ const HomePage = () => {
       addAnimation(scrollers);
     }
 
-    fetchGenres(); // Pozivanje funkcije za dohvat podataka
+    fetchGenres(); 
   }, []);
 
  
@@ -64,7 +64,7 @@ const HomePage = () => {
       ref={scrollersRef}
       className="flex items-center min-h-screen flex-col p-10 bg-[#F2F2F2]"
     >
-      {/* Featured Author Section */}
+      {/* Hero layer
       <div className="flex items-center justify-center w-full">
         <div className="flex flex-col md:flex-row items-center justify-around w-full max-w-screen-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
           <Image
@@ -84,7 +84,7 @@ const HomePage = () => {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Books Scroller */}
       <div className="top-books-scroller w-full max-w-screen-2xl border-b-[0.5px] border-[#F2CAB3]">
@@ -137,12 +137,9 @@ const HomePage = () => {
           </div>
         </div>
       </div>
-
+ 
       {/* Genre list */}
-
-    
-      {/* Genre list */}
-      <div className="w-full max-w-screen-2xl my-6">
+      <div className="w-full max-w-screen-2xl py-6 my-6 border-b-[0.5px] border-[#F2CAB3]">
         <p className="text-3xl text-[#593E2E] tracking-tight text-left mb-8">
           Browse books by your favourite genre
         </p>
@@ -160,13 +157,15 @@ const HomePage = () => {
             ))}
             {/* Link to View All Genres */}
             <Link href="/genres">
-              <div className="text-blue-500 underline text-right col-span-2 cursor-pointer">
-                <p className="m-0">View All Genres</p>
+              <div className="text-blue-500  max-w-screen-2xl underline text-right cursor-pointer">
+                <p className="w-full max-w-screen-2xl">View All Genres</p>
               </div>
             </Link>
           </div>
         )}
       </div>
+
+      
 
     </main>
   );
