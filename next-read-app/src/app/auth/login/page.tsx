@@ -1,8 +1,9 @@
+// app/auth/login/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import LoginModal from "./components/LoginModal";
+import LoginModal from "@/app/auth/login/components/LoginModal";  // Putanja prema LoginModal
 
 const LoginPage = () => {
   const [isOpen, setIsOpen] = useState(true);
@@ -10,14 +11,19 @@ const LoginPage = () => {
 
   const handleClose = () => {
     setIsOpen(false);
-    router.back(); 
+    router.push("/"); // Vrati na početnu stranicu nakon zatvaranja modala
   };
 
-  useEffect(() => {
-    setIsOpen(true);
-  }, []);
-
-  return <LoginModal isOpen={isOpen} onClose={handleClose} />;
+  return (
+    <LoginModal
+      isOpen={isOpen}
+      onClose={handleClose}
+      onLogin={(email: string, password: string) => {
+        console.log("User logged in with:", email, password);
+        handleClose();
+      }}
+    />
+  );
 };
 
 export default LoginPage;

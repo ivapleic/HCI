@@ -3,8 +3,8 @@
 import { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import Logo from "../Logo/Logo"; 
-import { cn } from "@/lib/utils"; 
+import Logo from "../Logo/Logo";
+import { cn } from "@/lib/utils";
 import { useClickOutside } from "@/hooks/useClickOutside";
 import SearchBar from "../SearchBar/SearchBar";
 
@@ -50,7 +50,6 @@ function Hamburger({ isOpen, toggleMenu }: HamburgerProps) {
   );
 }
 
-
 function processPage(
   page: Page,
   index: number,
@@ -60,26 +59,21 @@ function processPage(
   const isActive = pathname === page.path;
   return (
     <li key={index} className="relative">
-     <Link href={page.path} onClick={onClick}>
+      <Link href={page.path} onClick={onClick}>
         <span
-          className={cn(
-            "px-4 py-2 text-sm", 
-            {
-            
-              "text-[#593E2E] sm:border-b-2 sm:border-[#593E2E] sm:hover:text-[#593E2E]":
-                isActive, 
-              "sm:border-b-0": !isActive, 
-              "sm:hover:text-[#593E2E]": !isActive, 
-            
-              "text-gray-800": !isActive, 
-              "sm:hidden": false, 
-            }
-          )}
+          className={cn("px-4 py-2 text-sm", {
+            "text-[#593E2E] sm:border-b-2 sm:border-[#593E2E] sm:hover:text-[#593E2E]":
+              isActive,
+            "sm:border-b-0": !isActive,
+            "sm:hover:text-[#593E2E]": !isActive,
+
+            "text-gray-800": !isActive,
+            "sm:hidden": false,
+          })}
         >
           {page.title}
         </span>
       </Link>
-    
     </li>
   );
 }
@@ -93,6 +87,16 @@ export function Navbar() {
   const closeMenu = () => setIsMenuOpen(false);
 
   useClickOutside(navRef, closeMenu);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = () => {
+    setIsModalOpen(true); // Otvorite modal kada korisnik klikne na Login
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false); // Zatvorite modal
+  };
 
   return (
     <nav
@@ -159,6 +163,7 @@ export function Navbar() {
           </Link>
           <Link
             href="/auth/login"
+            onClick={openModal}
             className="w-full bg-[#593E2E] text-white px-4 py-2 rounded-md text-center"
           >
             Login
