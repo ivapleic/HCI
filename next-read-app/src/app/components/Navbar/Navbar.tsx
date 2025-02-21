@@ -12,31 +12,31 @@ type HamburgerProps = {
   toggleMenu: () => void;
 };
 
-function Hamburger({ isOpen, toggleMenu }: HamburgerProps) {
-  return (
-    <button
-      className="flex sm:hidden flex-col justify-center items-center w-10 h-10 space-y-1 rounded hover:bg-gray-200"
-      aria-label={isOpen ? "Close menu" : "Open menu"}
-      onClick={toggleMenu}
-    >
-      <span
-        className={cn("w-8 h-1 bg-black rounded transition-transform", {
-          "rotate-45 translate-y-2": isOpen,
-        })}
-      />
-      <span
-        className={cn("w-6 h-1 bg-black rounded transition-opacity", {
-          "opacity-0": isOpen,
-        })}
-      />
-      <span
-        className={cn("w-8 h-1 bg-black rounded transition-transform", {
-          "-rotate-45 -translate-y-2": isOpen,
-        })}
-      />
-    </button>
-  );
-}
+// function Hamburger({ isOpen, toggleMenu }: HamburgerProps) {
+//   return (
+//     <button
+//       className="flex sm:hidden flex-col justify-center items-center w-10 h-10 space-y-1 rounded hover:bg-gray-200"
+//       aria-label={isOpen ? "Close menu" : "Open menu"}
+//       onClick={toggleMenu}
+//     >
+//       <span
+//         className={cn("w-8 h-1 bg-black rounded transition-transform", {
+//           "rotate-45 translate-y-2": isOpen,
+//         })}
+//       />
+//       <span
+//         className={cn("w-6 h-1 bg-black rounded transition-opacity", {
+//           "opacity-0": isOpen,
+//         })}
+//       />
+//       <span
+//         className={cn("w-8 h-1 bg-black rounded transition-transform", {
+//           "-rotate-45 -translate-y-2": isOpen,
+//         })}
+//       />
+//     </button>
+//   );
+// }
 
 export function Navbar() {
   const pathname = usePathname();

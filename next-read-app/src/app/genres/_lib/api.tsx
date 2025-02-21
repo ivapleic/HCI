@@ -16,7 +16,7 @@ export type Book = {
     Title:string,
     CoverImage:Asset,
     Description:string,
-    Rating:Number,
+    Rating:number,
     Author:Author[],
     Language:string,
     ISBN:string,
