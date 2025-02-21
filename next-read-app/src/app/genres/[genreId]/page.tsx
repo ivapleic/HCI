@@ -1,53 +1,48 @@
 "use client";
 
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, useParams } from "next/navigation"; 
 import { getGenreById, getListsByGenre } from "@/lib/api";
 import { useState, useEffect } from "react";
 
-// Tip za props
-type GenrePageProps = {
-  params: { genreId: string };
-};
+export default function GenrePage() {
+  const params = useParams(); 
+  const genreId = params?.genreId as string; 
 
-
-
-// Glavna funkcija komponente
-export default function GenrePage({ params }: GenrePageProps) {
   const [genre, setGenre] = useState<any>(null);
   const [lists, setLists] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
+    if (!genreId) return; 
+
     const fetchData = async () => {
       setLoading(true);
       try {
-        const genreData = await getGenreById(params.genreId);
-        if (!genreData) {
-          notFound();
-          return;
-        }
-        setGenre(genreData);
-        const listsData = await getListsByGenre(params.genreId);
-        setLists(listsData);
+        const genreData = await getGenreById(genreId);
+        console.log("Fetched Genre Data:", genreData);
+
+        const listsData = await getListsByGenre(genreId);
+        console.log("Fetched Lists Data:", listsData);
+
+        setGenre(genreData || null);
+        setLists(listsData || []);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
+
     fetchData();
-  }, [params.genreId]);
+  }, [genreId]);
 
-  if (loading) {
-    return <p>Loading...</p>;
+  if (!loading && !genre) {
+    return notFound();
   }
 
-  if (!genre) {
-    notFound();
-  }
-
-  const { name, description } = genre.fields;
+  const name = genre?.fields?.name || "Unknown Genre";
+  const description = genre?.fields?.description || "No description available.";
 
   return (
     <main className="flex min-h-screen flex-col items-center p-10 bg-gray-50">

@@ -7,13 +7,13 @@ import { getGenreList } from "@/lib/api";
 
 const HomePage = () => {
   const scrollersRef = useRef<HTMLElement | null>(null);
-  const [genres,setGenres]=useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true); 
+  const [genres, setGenres] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const fetchGenres = async () => {
     try {
       const data = await getGenreList();
-      setGenres(data); 
+      setGenres(data);
     } catch (error) {
       console.error("Error fetching genres:", error);
     } finally {
@@ -22,7 +22,6 @@ const HomePage = () => {
   };
 
   console.log(genres);
- 
 
   useEffect(() => {
     const scrollers = scrollersRef.current?.querySelectorAll(".scroller");
@@ -35,10 +34,8 @@ const HomePage = () => {
       addAnimation(scrollers);
     }
 
-    fetchGenres(); 
+    fetchGenres();
   }, []);
-
- 
 
   function addAnimation(scrollers: NodeListOf<Element>) {
     scrollers.forEach((scroller) => {
@@ -64,34 +61,11 @@ const HomePage = () => {
       ref={scrollersRef}
       className="flex items-center min-h-screen flex-col p-10 bg-[#F2F2F2]"
     >
-      {/* Hero layer
-      <div className="flex items-center justify-center w-full">
-        <div className="flex flex-col md:flex-row items-center justify-around w-full max-w-screen-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-          <Image
-            src="/assets/home-page-image-2.png"
-            alt="author"
-            width={300}
-            height={300}
-            className="object-cover w-full md:w-1/2"
-          />
-          <div className="p-8 md:w-1/3">
-            <h2 className="text-2xl font-bold text-gray-800 mb-4 text-right">
-              "A reader has a thousand lives before he dies. The man who never
-              reads lives only one."
-            </h2>
-            <p className="text-gray-600 leading-relaxed text-right">
-              - George R.R. Martin, A Dance with Dragons
-            </p>
-          </div>
-        </div>
-      </div> */}
-
       {/* Books Scroller */}
       <div className="top-books-scroller w-full max-w-screen-2xl border-b-[0.5px] border-[#F2CAB3]">
         <p className="text-3xl text-[#593E2E] tracking-tight text-left my-6">
           Top Books this week
         </p>
-
         <div
           className="scroller mx-4 sm:mx-6 lg:mx-8"
           data-direction="left"
@@ -137,7 +111,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
- 
+
       {/* Genre list */}
       <div className="w-full max-w-screen-2xl py-6 my-6 border-b-[0.5px] border-[#F2CAB3]">
         <p className="text-3xl text-[#593E2E] tracking-tight text-left mb-8">
@@ -145,28 +119,30 @@ const HomePage = () => {
         </p>
 
         {loading ? (
-          <div>Loading genres...</div> // Prikazuje se dok se žanrovi učitavaju
+          <div>Loading genres...</div>
         ) : (
-          <div className="grid grid-cols-2 gap-6">
-            {genres.map((genre: any, index: number) => (
-              <Link key={index} href={`/genres/${genre.sys.id}`}>
-                <div className="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer">
-                 {genre.fields.name} {/* Prikazivanje imena žanra */}
-                </div>
+          <>
+            <div className="grid grid-cols-2 gap-6">
+              {genres.slice(0, 8).map((genre: any, index: number) => (
+                <Link key={index} href={`/genres/${genre.sys.id}`}>
+                  <div className="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer">
+                    {genre.fields.name}
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* View All Genres aligned to the right */}
+            <div className="w-full flex justify-end mt-8">
+              <Link href="/genres">
+                <p className="text-blue-500 underline cursor-pointer">
+                  View All Genres
+                </p>
               </Link>
-            ))}
-            {/* Link to View All Genres */}
-            <Link href="/genres">
-              <div className="text-blue-500  max-w-screen-2xl underline text-right cursor-pointer">
-                <p className="w-full max-w-screen-2xl">View All Genres</p>
-              </div>
-            </Link>
-          </div>
+            </div>
+          </>
         )}
       </div>
-
-      
-
     </main>
   );
 };
