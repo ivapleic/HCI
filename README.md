@@ -18,7 +18,7 @@
 
 ### Semester Project
 
-- Link to your production version: [**Production Version**](https://next-reads-jz7u9xf8h-iva-pleics-projects.vercel.app/) 
+- Link to your production version: [**Production Version**](https://next-reads-irptglcd3-iva-pleics-projects.vercel.app/) 
 - Link to your final report: [**Final Report**](URL_TO_FINAL_REPORT) <!-- Replace with actual URL -->
 <!-- Add more as necessary -->
 
