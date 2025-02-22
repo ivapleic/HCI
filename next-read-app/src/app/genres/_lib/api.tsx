@@ -6,7 +6,7 @@ export type Genre = {
 };
 
 export type List= {
-    Name: string;
+  Name: string;
   Description: string;
   Genres:Genre[],
   Books:Book[],

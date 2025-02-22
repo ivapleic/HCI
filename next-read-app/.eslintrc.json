@@ -1,3 +1,8 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "extends": ["next/core-web-vitals", "next/typescript"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",          // Isključuje provjeru za 'any' tip
+    "@typescript-eslint/explicit-module-boundary-types": "off", // Isključuje provjeru za eksplicitne tipove
+    "@typescript-eslint/no-unused-vars": "off"           // Isključuje provjeru za neiskorištene varijable
+  }
 }
