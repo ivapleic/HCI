@@ -2,48 +2,156 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getGenreList } from "@/lib/api"; // Importirajte funkciju za dohvat žanrova
+import { getGenreList, getBooks } from "./_lib/genresApi"; // Dohvati podatke
 
 const GenresPage = () => {
-  const [genres, setGenres] = useState<any[]>([]); // State za spremanje žanrova
-  const [loading, setLoading] = useState<boolean>(true); // State za prikazivanje loading statusa
+  const [genres, setGenres] = useState<any[]>([]);
+  const [books, setBooks] = useState<any[]>([]); // Sve knjige
+  const [filteredBooksByGenre, setFilteredBooksByGenre] = useState<any>(
+    {} // Objekt koji sadrži filtrirane knjige za svaki žanr
+  );
+  const [loading, setLoading] = useState<boolean>(true);
 
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 3;
+
+  const totalPages = Math.ceil(genres.length / itemsPerPage);
+  const displayedGenres = genres.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
+  // Fetch žanrova i knjiga
   useEffect(() => {
-    // Dohvat žanrova kad se komponenta montira
-    const fetchGenres = async () => {
+    const fetchGenresAndBooks = async () => {
       try {
-        const data = await getGenreList(); // Dohvat žanrova
-        setGenres(data); // Spremanje žanrova u state
+        const genreData = await getGenreList();
+        setGenres(genreData); // Postavite žanrove
+        const booksData = await getBooks(); // Dohvatite sve knjige
+        setBooks(booksData); // Postavite sve knjige
+
+        // Filtriranje knjiga po žanrovima
+        const filteredBooks: any = {};
+        genreData.forEach((genre: any) => {
+          filteredBooks[genre.sys.id] = booksData.filter((book) =>
+            book.fields.genre.some(
+              (genreItem: any) => genreItem.sys.id === genre.sys.id
+            )
+          );
+        });
+        setFilteredBooksByGenre(filteredBooks); // Postavite filtrirane knjige po žanrovima
       } catch (error) {
-        console.error("Error fetching genres:", error);
+        console.error("Error fetching genres or books:", error);
       } finally {
-        setLoading(false); // Kada su podaci dohvaćeni, postavljamo loading na false
+        setLoading(false);
       }
     };
 
-    fetchGenres(); // Pozivanje funkcije za dohvat žanrova
+    fetchGenresAndBooks();
   }, []);
 
-  console.log(genres);
-
   return (
-    <div className="w-full max-w-screen-2xl my-6 px-6">
-      <h1 className="text-3xl text-[#593E2E] font-bold tracking-tight text-left mb-8">
-        Browse All Genres
-      </h1>
-
+    <div className="w-full my-4 px-20 mx-0">
       {loading ? (
-        <div className="text-center text-lg">Loading genres...</div> // Prikazujemo loading dok se žanrovi učitavaju
+        <div className="text-center text-lg">Loading genres...</div>
       ) : (
-        <div className="space-y-4">
-          {/* Prikazivanje žanrova kao lista */}
-          {genres.map((genre: any) => (
-            <Link key={genre.sys.id} href={`/genres/${genre.sys.id}`}>
-              <div className="p-4 my-8 bg-gray-100 rounded-md shadow-md hover:bg-gray-200 transition-all">
-                <h3 className="text-xl font-semibold text-gray-800">{genre.fields.name}</h3>
-              </div>
-            </Link>
-          ))}
+        <div className="grid grid-cols-3 gap-10">
+          {/* Lijevi div: Paginirani žanrovi + detalji */}
+          <div className="col-span-2 bg-white p-6 rounded-lg shadow-md border">
+            <h1 className="text-3xl text-[#593E2E] font-bold tracking-tight text-left mb-8">
+              Genres
+            </h1>
+            <div className="space-y-8">
+              {displayedGenres.map((genre, index) => (
+                <div key={index} className="border-b pb-6">
+                  {/* Naslov žanra */}
+                  <h3 className="text-xl font-bold text-gray-900 mb-2">
+                    {genre.fields.name}
+                  </h3>
+
+                  {/* Grid s knjigama za ovaj žanr */}
+                  <div className="grid grid-cols-6 gap-4">
+                    {filteredBooksByGenre[genre.sys.id]?.length > 0 ? (
+                      filteredBooksByGenre[genre.sys.id].map(
+                        (book: any, idx: number) => (
+                          <img
+                            key={idx}
+                            src={book.fields.coverImage.fields.file.url}
+                            alt={book.fields.title}
+                            className="ss object-cover rounded-md shadow-md"
+                          />
+                        )
+                      )
+                    ) : (
+                      <p>No books available for this genre.</p>
+                    )}
+                  </div>
+
+                  {/* Link na desnoj strani */}
+                  <div className="text-right mt-4">
+                    <Link
+                      href={`/genres/${genre.fields.name.toLowerCase()}`}
+                      className="text-[#593E2E] hover:underline font-medium"
+                    >
+                      More {genre.fields.name} Books →
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Navigacija stranica */}
+            <div className="flex justify-center space-x-6 mt-6">
+              <button
+                onClick={() => setPage(page - 1)}
+                disabled={page === 1}
+                className={`px-4 py-2 rounded-md ${
+                  page === 1
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
+                }`}
+              >
+                Previous
+              </button>
+              <span className="text-gray-700 font-semibold flex items-center justify-center">
+                Page {page} of {totalPages}
+              </span>
+              <button
+                onClick={() => setPage(page + 1)}
+                disabled={page === totalPages}
+                className={`px-4 py-2 rounded-md ${
+                  page === totalPages
+                    ? "bg-gray-300 cursor-not-allowed"
+                    : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          </div>
+
+          {/* Desni div: Popis svih žanrova */}
+          <div className="bg-gray-100 p-6 rounded-lg shadow-md border">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
+              All Genres
+            </h2>
+
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-4">
+              {genres.map((genre, index) => (
+                <li key={`${genre.sys.id}-${index}`} className="border-b pb-2">
+                  <Link
+                    href={`/genres/${genre.fields.name
+                      .toLowerCase()
+                      .replace(/\s+/g, "-")}`}
+                  >
+                    <span className="text-gray-800 hover:text-blue-500 transition">
+                      {genre.fields.name}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       )}
     </div>

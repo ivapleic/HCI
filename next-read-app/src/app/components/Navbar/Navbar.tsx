@@ -59,7 +59,7 @@ export function Navbar() {
 
   return (
     <nav
-      className="py-6 px-6 border-b border-gray-300 bg-white sticky top-0 z-10"
+      className="py-6 px-20 border-b border-gray-300 bg-white sticky top-0 z-10"
       ref={navRef}
     >
       <div className="container mx-auto flex justify-between items-center">
@@ -107,7 +107,7 @@ export function Navbar() {
                 <MegaMenu
                   isOpen={isMegaMenuOpen}
                   // Dodaj odgovarajući prop za širinu
-                  customWidth="w-screen md:w-[700px]" // Ovo će postaviti širinu na 1200px
+                  customWidth="w-screen md:w-[600px]" // Ovo će postaviti širinu na 1200px
                 />
               </div>
             </li>

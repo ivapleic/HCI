@@ -34,7 +34,7 @@ const MegaMenu = ({ isOpen, customWidth }: MegaMenuProps) => {
     >
       <div className="flex justify-between ">
         {/* Left column: Mega menu links */}
-        <div className="flex-1 space-y-8">
+        <div className="space-y-8 pr-8 mr-10 border-r border-black">
           <h4 className="font-semibold text-lg text-gray-800">Browse</h4>
           <ul className="space-y-6">
             {megaMenuLinks.map((link) => (
@@ -47,13 +47,11 @@ const MegaMenu = ({ isOpen, customWidth }: MegaMenuProps) => {
           </ul>
         </div>
 
-        {/* Vertical divider */}
-        <div className="border-l border-gray-300 h-full" />
-
+    
         {/* Right column: Genres (in 3 columns, each containing 5 items) */}
         <div className="flex-1 space-y-8">
-          <h4 className="font-semibold text-lg text-gray-800">Genres</h4>
-          <div className="grid grid-cols-3 w-full gap-6">
+          <h4 className="font-semibold text-lg text-gray-800">Popular genres</h4>
+          <div className="grid grid-cols-3 w-full gap-4">
             {genres.slice(0, 15).map((genre, index) => (
               <div key={index}>
                     <span className="text-gray-800 w-40">{genre}</span>

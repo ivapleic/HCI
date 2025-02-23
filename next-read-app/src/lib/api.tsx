@@ -7,25 +7,17 @@ import {
   TypeListSkeleton,
 } from "@/content-types";
 
-
-export const getGenreList = async (): Promise<TypeGenreSkeleton[]> => {
+export const getGenreList = async (): Promise<Entry<TypeGenreSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>[]> => {
   try {
     const data = await contentfulClient.withoutUnresolvableLinks.getEntries<TypeGenreSkeleton>({
       content_type: "genre",
-      select: ["fields"], // Only select fields
+      select: ["fields"],
     });
 
-    // Map through the returned data and ensure proper sys structure
-    return data.items.map((item) => ({
-      sys: {
-        ...item.sys,  // Keep the existing sys structure
-        contentTypeId: "genre", // Explicitly define contentTypeId as "genre"
-      },
-      fields: item.fields,  // Include the fields as expected by TypeGenreSkeleton
-    }));
+    return data.items; // Return the full Entry object
   } catch (error) {
     console.error("Error fetching genre list:", error);
-    return []; // Return an empty array on error
+    return []; // Return empty array on error
   }
 };
 
