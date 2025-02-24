@@ -65,7 +65,6 @@ export const getBooks = async (): Promise<Entry<TypeBooksSkeleton, "WITHOUT_UNRE
       select: ["fields"], // Dohvaća samo polja koja nas zanimaju
     });
 
-    console.log(data.items); // Ovdje možete ispisati knjige da biste vidjeli kako izgledaju
     return data.items;
   } catch (error) {
     console.error("Error fetching books:", error);
