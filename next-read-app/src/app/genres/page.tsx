@@ -70,21 +70,17 @@ const GenresPage = () => {
                   </h3>
 
                   {/* Grid s knjigama za ovaj žanr */}
-                  <div className="grid grid-cols-6 gap-4">
-                    {filteredBooksByGenre[genre.sys.id]?.length > 0 ? (
-                      filteredBooksByGenre[genre.sys.id].map(
-                        (book: any, idx: number) => (
-                          <img
-                            key={idx}
-                            src={book.fields.coverImage.fields.file.url}
-                            alt={book.fields.title}
-                            className="ss object-cover rounded-md shadow-md"
-                          />
-                        )
-                      )
-                    ) : (
-                      <p>No books available for this genre.</p>
-                    )}
+                  <div className="flex space-x-4 overflow-hidden">
+                    {filteredBooksByGenre[genre.sys.id]
+                      ?.slice(0, 6)
+                      .map((book: any, idx: number) => (
+                        <img
+                          key={idx}
+                          src={book.fields.coverImage.fields.file.url}
+                          alt={book.fields.title}
+                          className="w-20 h-28 object-cover rounded-md shadow-md"
+                        />
+                      ))}
                   </div>
 
                   {/* Link na desnoj strani */}
