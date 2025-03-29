@@ -24,60 +24,57 @@ export default function GenrePage() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        // Dohvat svih žanrova
+        // Dohvati sve žanrove
         const genresData = await getGenreList();
         setGenres(genresData || []);
-  
-        // Dohvat žanra prema imenu
+
+        // Pronađi točan žanr prema URL parametru
         const genreData = genresData.find(
           (g: any) => g.fields.name.toLowerCase() === genreName.toLowerCase()
         );
-  
+
         if (!genreData) {
-          return notFound(); // Ako žanr nije pronađen
+          return notFound();
         }
-  
+
         setGenre(genreData);
-        // Dohvati sve knjige i filtriraj ih po žanru
+
+        // Dohvati sve knjige i filtriraj prema žanru
         const allBooks = await getBooks();
         const genreBooks = allBooks.filter((book: any) =>
           book.fields.genre?.some((g: any) => g.sys.id === genreData.sys.id)
         );
-  
+
         setBooks(genreBooks);
 
+        // Dohvati sve liste
         const listsData = await getLists();
         setLists(listsData);
-        
-        console.log(lists);        // Filtriraj liste prema žanru odmah iz dohvaćenih podataka
+
+        // 📌 **Ključni popravak: Pravilno filtriranje lista prema žanru**
         const genreLists = listsData.filter((list: any) =>
-          list.fields.genre?.some((g: any) => g.sys.id === genreData.sys.id)
+          list.fields.genres?.some((g: any) => g.sys.id === genreData.sys.id)
         );
-        
+
         setFilteredLists(genreLists);
 
-        console.log(filteredLists);
-        
-  
         // Filtriraj knjige koje su objavljene ove godine
         const currentYear = new Date().getFullYear();
         const recentBooks = genreBooks.filter((book: any) => {
           const publicationYear = parseInt(book.fields.publicationYear, 10);
           return publicationYear && publicationYear === currentYear;
         });
-  
-        setNewReleases(recentBooks.slice(0, 5)); // Prikazujemo samo 5 novih knjiga
-  
+
+        setNewReleases(recentBooks.slice(0, 5));
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
   }, [genreName]);
-  
 
   if (!loading && !genre) {
     return notFound();
@@ -125,26 +122,59 @@ export default function GenrePage() {
             </div>
           </div>
 
-         {/* Sekcija: Lists under this Genre */}
-         <div className="mb-10">
-            <h2 className="text-xl font-bold mb-4 text-gray-900">
-              Lists under this Genre:
-            </h2>
+          {/* Sekcija: Lists under this Genre */}
+          <div className="mb-10">
+          <Link
+                href={`/tags/${genreName.toLowerCase()}`}
+                className="text-blue-600 hover:underline font-semibold"
+              >
+                Lists with this genre →
+              </Link>
+
             {filteredLists.length > 0 ? (
-              filteredLists.map((list: any, index: number) => (
-                <div key={index} className="p-4 bg-gray-100 rounded-lg shadow-sm mb-4">
-                  <h3 className="text-lg font-semibold text-red-800 mb-4">
-                    {list.fields.name}
-                  </h3>
-                  {list.fields.books?.map((book: any, bookIndex: number) => (
-                    <div key={bookIndex} className="p-2 bg-white rounded-md shadow-sm mb-2">
-                      <h4 className="font-medium text-gray-700">{book.fields.title}</h4>
-                    </div>
-                  ))}
-                </div>
-              ))
+              <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredLists.map((list, index) => (
+                  <div
+                    key={index}
+                    className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 flex flex-col items-start"
+                  >
+                    <Link href={`/lists/${list.fields.name.toLowerCase()}`}>
+                      <div className="w-full">
+                        {/* Grid sa 4 knjige u istom redu */}
+                        <div className="grid grid-cols-4 gap-1 w-full mb-2">
+                          {list.fields.books?.length > 0 ? (
+                            list.fields.books
+                              .slice(0, 4)
+                              .map((book: any, idx: number) => (
+                                <div key={idx} className="relative">
+                                  <img
+                                    src={
+                                      book.fields.coverImage?.fields.file.url
+                                    }
+                                    alt={book.fields.title}
+                                    className="object-cover rounded-md shadow-md w-full h-20"
+                                  />
+                                </div>
+                              ))
+                          ) : (
+                            <p className="text-sm col-span-4 text-center">
+                              No books available
+                            </p>
+                          )}
+                        </div>
+                        {/* Ime liste ispod slika */}
+                        <h3 className="text-sm sm:text-base text-start font-bold text-gray-900 hover:text-blue-500 transition-colors duration-200">
+                          {list.fields.name}
+                        </h3>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
             ) : (
-              <p className="text-gray-600">No lists available for this genre.</p>
+              <p className="text-gray-600">
+                No lists available for this genre.
+              </p>
             )}
           </div>
 

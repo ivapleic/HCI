@@ -4,12 +4,14 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { getGenreList, getBooks } from "./_lib/genresApi"; // Dohvati podatke
 
+
 const GenresPage = () => {
   const [genres, setGenres] = useState<any[]>([]);
   const [books, setBooks] = useState<any[]>([]); // Sve knjige
   const [filteredBooksByGenre, setFilteredBooksByGenre] = useState<any>(
     {} // Objekt koji sadrži filtrirane knjige za svaki žanr
   );
+  
   const [loading, setLoading] = useState<boolean>(true);
 
   const [page, setPage] = useState(1);

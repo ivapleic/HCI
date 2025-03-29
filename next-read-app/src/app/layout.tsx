@@ -11,14 +11,14 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/assets/favicon.ico" />
       </head>
-      <body>
-
-          <Navbar />
+      <body className="flex flex-col min-h-screen">
+        <Navbar />
+        <main className="flex-grow">
           {children} 
-          <Footer />
-        
+        </main>
+        <Footer />  
       </body>
     </html>
   );

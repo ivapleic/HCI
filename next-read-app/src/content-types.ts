@@ -39,6 +39,7 @@ export interface TypeListFields {
     name: EntryFieldTypes.Symbol;
     description?: EntryFieldTypes.RichText;
     genres?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeGenreSkeleton>>;
+    tag?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeTagSkeleton>>;
     books?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeBooksSkeleton>>;
 }
 
@@ -58,3 +59,11 @@ export interface TypeUserFields {
 
 export type TypeUserSkeleton = EntrySkeletonType<TypeUserFields, "user">;
 export type TypeUser<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeUserSkeleton, Modifiers, Locales>;
+
+export interface TypeTagFields {
+    tagName: EntryFieldTypes.Symbol;
+
+}
+
+export type TypeTagSkeleton = EntrySkeletonType<TypeTagFields, "tag">;
+export type TypeTag<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeTagSkeleton, Modifiers, Locales>;

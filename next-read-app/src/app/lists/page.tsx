@@ -2,12 +2,14 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { getLists } from "./_lib/ListApi";
+import { getAllTags } from "../tags/_lib/TagsApi";
 
 const ListsPage = () => {
   const [lists, setLists] = useState<any[]>([]);
+  const [tags, setTags] = useState<any[]>([]); // Za pohranu svih tagova
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 15;
 
   const totalPages = Math.ceil(lists.length / itemsPerPage);
   const displayedLists = lists.slice(
@@ -16,17 +18,24 @@ const ListsPage = () => {
   );
 
   useEffect(() => {
-    const fetchLists = async () => {
+    const fetchListsAndTags = async () => {
       try {
+        setLoading(true);
+
+        // Dohvat tagova
+        const allTags = await getAllTags();
+        setTags(allTags);
+
+        // Dohvat lista
         const listsData = await getLists();
         setLists(listsData);
       } catch (error) {
-        console.error("Error fetching lists:", error);
+        console.error("Error fetching data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchLists();
+    fetchListsAndTags();
   }, []);
 
   return (
@@ -50,7 +59,7 @@ const ListsPage = () => {
               {displayedLists.map((list, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 flex flex-col items-center"
+                  className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 flex flex-col items-start"
                 >
                   <Link href={`/lists/${list.fields.name.toLowerCase()}`}>
                     <div className="w-full">
@@ -73,7 +82,7 @@ const ListsPage = () => {
                         )}
                       </div>
                       {/* Ime liste ispod slika */}
-                      <h3 className="text-sm sm:text-base text-center font-bold text-gray-900 hover:text-blue-500 transition-colors duration-200">
+                      <h3 className="text-sm sm:text-base text-start font-bold text-gray-900 hover:text-blue-500 transition-colors duration-200">
                         {list.fields.name}
                       </h3>
                     </div>
@@ -111,26 +120,28 @@ const ListsPage = () => {
               </button>
             </div>
           </div>
-
-          {/* Desni div: Sve liste */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md border">
+  {/* Desni div: Popis svih tagova */}
+  <div className="bg-gray-100 p-6 rounded-lg shadow-md border">
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-              All Lists
+              Browse by Tags
             </h2>
-            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4">
-              {lists.map((list, index) => (
-                <li key={`${list.sys.id}-${index}`} className="border-b pb-2">
-                  <Link
-                    href={`/lists/${list.fields.name.toLowerCase().replace(/\s+/g, "-")}`}
-                  >
-                    <span className="text-gray-800 hover:text-blue-500 transition">
-                      {list.fields.name}
-                    </span>
-                  </Link>
-                </li>
-              ))}
+
+            <ul className="grid grid-cols-2 gap-x-6 gap-y-4">
+              {tags.length > 0 ? (
+                tags.map((tag: any) => (
+                  <li key={tag.sys.id} className="border-b pb-2">
+                    <Link href={`/tags/${tag.fields.tagName.toLowerCase()}`}>
+                      <span className="text-gray-800 hover:text-blue-500 transition">
+                        {tag.fields.tagName}
+                      </span>
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                <p>No tags available.</p>
+              )}
             </ul>
-          </div>
+          </div> 
         </div>
       )}
     </div>
