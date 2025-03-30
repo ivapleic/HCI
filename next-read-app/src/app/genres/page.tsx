@@ -80,7 +80,7 @@ const GenresPage = () => {
                           key={idx}
                           src={book.fields.coverImage.fields.file.url}
                           alt={book.fields.title}
-                          className="w-20 h-28 object-cover rounded-md shadow-md"
+                          className="w-24 h-33 2xl:w-40 2xl:h-60 object-cover rounded-md shadow-md"
                         />
                       ))}
                   </div>

@@ -124,12 +124,12 @@ export default function GenrePage() {
 
           {/* Sekcija: Lists under this Genre */}
           <div className="mb-10">
-          <Link
-                href={`/tags/${genreName.toLowerCase()}`}
-                className="text-blue-600 hover:underline font-semibold"
-              >
-                Lists with this genre →
-              </Link>
+            <Link
+              href={`/tags/${genreName.toLowerCase()}`}
+              className="text-blue-600 hover:underline font-semibold"
+            >
+              Lists with this genre →
+            </Link>
 
             {filteredLists.length > 0 ? (
               <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
@@ -179,28 +179,30 @@ export default function GenrePage() {
           </div>
 
           <div className="mb-10">
-  <h2 className="text-xl font-bold mb-4 text-gray-900">
-  <Link href={`/books?genre=${genreName}`}>Books of this Genre</Link>
-  </h2>
-  <div className="flex flex-wrap gap-4">
-    {books.length > 0 ? (
-      books
-        .slice(0, 5) // Prikazuje prvih 5 knjiga
-        .map((book: any, index: number) => (
-          <img
-            key={index}
-            src={book.fields.coverImage.fields.file.url}
-            alt={book.fields.title}
-            className="w-28 h-40 object-cover rounded-md"
-          />
-        ))
-    ) : (
-      <p className="text-gray-600">
-        No books available for this genre.
-      </p>
-    )}
-  </div>
-</div>
+            <h2 className="text-xl font-bold mb-4 text-gray-900">
+              <Link href={`/books?genre=${genreName}`}>
+                Books of this Genre
+              </Link>
+            </h2>
+            <div className="flex flex-wrap gap-4">
+              {books.length > 0 ? (
+                books
+                  .slice(0, 5) // Prikazuje prvih 5 knjiga
+                  .map((book: any, index: number) => (
+                    <img
+                      key={index}
+                      src={book.fields.coverImage.fields.file.url}
+                      alt={book.fields.title}
+                      className="w-28 h-40 object-cover rounded-md"
+                    />
+                  ))
+              ) : (
+                <p className="text-gray-600">
+                  No books available for this genre.
+                </p>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Desni div: Popis svih žanrova (uži dio) */}

@@ -68,4 +68,14 @@ export const getListsByGenre = async (genreId: string) => {
   }
 };
 
+ // Funkcija za dohvat autora na temelju ID-a
+export const GetAuthorById = async (authorId: string) => {
+  try {
+    const data = await contentfulClient.getEntry(authorId);
+    return data.fields; // Vraća podatke o autoru
+  } catch (error) {
+    console.error("Error fetching author:", error);
+    return null;
+  }
+};
 
