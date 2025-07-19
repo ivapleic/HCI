@@ -61,7 +61,7 @@ const ListsPage = () => {
                   key={index}
                   className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 flex flex-col items-start"
                 >
-                  <Link href={`/lists/${list.fields.name.toLowerCase()}`}>
+                  <Link href={`/lists/${list.sys.id}`}>
                     <div className="w-full">
                       {/* Grid sa 4 knjige u istom redu */}
                       <div className="grid grid-cols-4 gap-1 w-full mb-2">

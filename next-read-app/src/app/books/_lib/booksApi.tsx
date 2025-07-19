@@ -85,3 +85,14 @@ const capitalizeGenreName = (genreName: string) => {
   return genreName.charAt(0).toUpperCase() + genreName.slice(1).toLowerCase();
 };
 
+// Funkcija za dohvat cijelog objekta knjige po ID-u
+export const getBookById = async (bookId: string) => {
+  try {
+    const entry = await contentfulClient.withoutUnresolvableLinks.getEntry<TypeBooksSkeleton>(bookId);
+
+    return entry; // pun objekt: uključuje sys, fields, reference (ako su resolve-ane)
+  } catch (error) {
+    console.error("Greška pri dohvaćanju knjige po ID-u:", error);
+    return null;
+  }
+};

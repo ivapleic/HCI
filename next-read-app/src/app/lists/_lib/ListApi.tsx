@@ -1,6 +1,6 @@
 import contentfulClient from "@/lib/contentfulClient";
 import { Entry } from "contentful";
-import { TypeGenreSkeleton, TypeListSkeleton, TypeBooksSkeleton,TypeTagSkeleton } from "@/content-types";
+import { TypeGenreSkeleton,TypeAuthorSkeleton, TypeListSkeleton, TypeBooksSkeleton,TypeTagSkeleton } from "@/content-types";
 
 
 // ✅ 1. Dohvaćanje svih lista
@@ -8,11 +8,11 @@ export const getLists = async (): Promise<
   Entry<TypeListSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>[]
 > => {
   try {
-    const data =
-      await contentfulClient.withoutUnresolvableLinks.getEntries<TypeListSkeleton>({
-        content_type: "list",
-        select: ["fields"],
-      });
+    const data = await contentfulClient.withoutUnresolvableLinks.getEntries<TypeListSkeleton>({
+      content_type: "list",
+    });
+    // console.log(data.items);
+    
     return data.items; 
   } catch (error) {
     console.error("Error fetching lists:", error);
@@ -86,6 +86,37 @@ export const getListsByTagName = async (tagName: string) => {
     return data.items;  // Vraćaš sve liste koje imaju povezani tag
   } catch (error) {
     console.error(`Error fetching lists for tag ${tagName}:`, error);
+    return [];
+  }
+};
+
+// ✅ Dohvati jednu listu po ID-u zajedno s povezanim knjigama i autorima
+export const getListById = async (id: string) => {
+  try {
+    const entry = await contentfulClient.getEntry<TypeListSkeleton>(id, {
+      include: 3, // Uključi povezane entitete (npr. knjige, autori unutar knjiga)
+    });
+
+    return entry;
+  } catch (error) {
+    console.error("Error fetching list by ID:", error);
+    return null;
+  }
+};
+
+
+// ✅ Dohvaćanje svih autora s njihovim knjigama (uključujući reference)
+export const getAllAuthors = async (): Promise<
+  Entry<TypeAuthorSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>[]
+> => {
+  try {
+    const data = await contentfulClient.withoutUnresolvableLinks.getEntries<TypeAuthorSkeleton>({
+      content_type: "author",   
+      include: 2,               
+    });
+    return data.items;
+  } catch (error) {
+    console.error("Error fetching authors:", error);
     return [];
   }
 };
