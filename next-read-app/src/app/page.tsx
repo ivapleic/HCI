@@ -110,7 +110,7 @@ const HomePage = () => {
           <>
             <div className="grid grid-cols-2 gap-6">
               {genres.slice(0, 8).map((genre: any, index: number) => (
-                <Link key={index} href={`/genres/${genre.sys.id}`}>
+                <Link key={index} href={`/genres/${genre.fields.name}`}>
                   <div className="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer">
                     {genre.fields.name}
                   </div>

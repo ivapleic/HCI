@@ -6,8 +6,8 @@ type MegaMenuProps = {
 };
 
 const megaMenuLinks = [
-  { name: "Recommended", href: "/" },
-  { name: "New Releases", href: "/" },
+  { name: "Recommended", href: "/recommendations" },
+  { name: "New Releases", href: "/new-releases" },
   { name: "Genres", href: "/genres" },
   { name: "Lists", href: "/lists" },
 ];
