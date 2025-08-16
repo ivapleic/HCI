@@ -2,37 +2,44 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { getGenreList, getBooks } from "./_lib/genresApi"; // Dohvati podatke
-
+import { useRouter } from "next/navigation";
+import { getGenreList, getBooks } from "./_lib/genresApi";
+import GenresList from "../components/GenresList/GenresList";
 
 const GenresPage = () => {
   const [genres, setGenres] = useState<any[]>([]);
-  const [books, setBooks] = useState<any[]>([]); // Sve knjige
-  const [filteredBooksByGenre, setFilteredBooksByGenre] = useState<any>(
-    {} // Objekt koji sadrži filtrirane knjige za svaki žanr
-  );
-  
+  const [books, setBooks] = useState<any[]>([]);
+  const [filteredBooksByGenre, setFilteredBooksByGenre] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
 
+  // pagination
   const [page, setPage] = useState(1);
-  const itemsPerPage = 3;
-
+  const itemsPerPage = 8;
   const totalPages = Math.ceil(genres.length / itemsPerPage);
   const displayedGenres = genres.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
 
-  // Fetch žanrova i knjiga
+  // search state
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
+  // filtered genres for sidebar
+  const filteredGenres = genres.filter((genre) =>
+    genre.fields.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // fetch genres and books
   useEffect(() => {
     const fetchGenresAndBooks = async () => {
       try {
         const genreData = await getGenreList();
-        setGenres(genreData); // Postavite žanrove
-        const booksData = await getBooks(); // Dohvatite sve knjige
-        setBooks(booksData); // Postavite sve knjige
+        setGenres(genreData);
 
-        // Filtriranje knjiga po žanrovima
+        const booksData = await getBooks();
+        setBooks(booksData);
+
         const filteredBooks: any = {};
         genreData.forEach((genre: any) => {
           filteredBooks[genre.sys.id] = booksData.filter((book) =>
@@ -41,51 +48,111 @@ const GenresPage = () => {
             )
           );
         });
-        setFilteredBooksByGenre(filteredBooks); // Postavite filtrirane knjige po žanrovima
+        setFilteredBooksByGenre(filteredBooks);
       } catch (error) {
         console.error("Error fetching genres or books:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchGenresAndBooks();
   }, []);
 
+  // search handler
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return;
+
+    const matchedGenre = genres.find(
+      (genre) => genre.fields.name.toLowerCase() === searchQuery.toLowerCase()
+    );
+
+    if (matchedGenre) {
+      const genreSlug = matchedGenre.fields.name
+        .toLowerCase()
+        .replace(/\s+/g, "-");
+
+      router.push(`/genres/${genreSlug}`);
+    } else {
+      router.push("/genres/not-found");
+    }
+  };
+
+  // scroll page to top on page change
+  useEffect(() => {
+    const topElement = document.getElementById("page-top");
+    if (topElement) {
+      topElement.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  }, [page]);
+
   return (
-    <div className="w-full my-4 px-20 mx-0">
+    <div
+      id="page-top"
+      className="w-full my-4 px-4 md:px-20 mx-auto max-w-[1200px] flex justify-center"
+    >
       {loading ? (
         <div className="text-center text-lg">Loading genres...</div>
       ) : (
-        <div className="grid grid-cols-3 gap-10">
-          {/* Lijevi div: Paginirani žanrovi + detalji */}
-          <div className="col-span-2 bg-white p-6 rounded-lg shadow-md border">
-            <h1 className="text-3xl text-[#593E2E] font-bold tracking-tight text-left mb-8">
+        <div
+          className="
+          grid grid-cols-1 md:grid-cols-3 gap-10 justify-center mx-auto
+          md:justify-normal
+        "
+        >
+          {/* Left div - genres with pagination and search */}
+          <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border">
+            <h1 className="text-3xl text-[#593E2E] font-bold tracking-tight text-left mb-4">
               Genres
             </h1>
+
+            {/* Search bar */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-8">
+              <input
+                type="text"
+                placeholder="Search genres by name..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="flex-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-[#593E2E]"
+                onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              />
+              <button
+                onClick={handleSearch}
+                className="px-4 py-2 bg-[#593E2E] text-white rounded-md hover:bg-[#8C6954] w-full sm:w-auto text-sm sm:text-base"
+              >
+                Search
+              </button>
+            </div>
+
+            {/* Paginated list of genres */}
             <div className="space-y-8">
               {displayedGenres.map((genre, index) => (
                 <div key={index} className="border-b pb-6">
-                  {/* Naslov žanra */}
                   <h3 className="text-xl font-bold text-gray-900 mb-2">
                     {genre.fields.name}
                   </h3>
 
-                  {/* Grid s knjigama za ovaj žanr */}
-                  <div className="flex space-x-4 overflow-hidden">
-                    {filteredBooksByGenre[genre.sys.id]
-                      ?.slice(0, 6)
-                      .map((book: any, idx: number) => (
-                        <img
-                          key={idx}
-                          src={book.fields.coverImage.fields.file.url}
-                          alt={book.fields.title}
-                          className="w-24 h-33 2xl:w-40 2xl:h-60 object-cover rounded-md shadow-md"
-                        />
-                      ))}
+                  <div className="flex space-x-4 overflow-hidden min-h-[132px]">
+                    {filteredBooksByGenre[genre.sys.id] &&
+                    filteredBooksByGenre[genre.sys.id].length > 0 ? (
+                      filteredBooksByGenre[genre.sys.id]
+                        .slice(0, 6)
+                        .map((book: any, idx: number) => (
+                          <img
+                            key={idx}
+                            src={book.fields.coverImage.fields.file.url}
+                            alt={book.fields.title}
+                            className="w-24 h-33 2xl:w-40 2xl:h-60 object-cover rounded-md shadow-md"
+                          />
+                        ))
+                    ) : (
+                      <p className="text-gray-500 italic">
+                        There are no books for this genre currently.
+                      </p>
+                    )}
                   </div>
 
-                  {/* Link na desnoj strani */}
                   <div className="text-right mt-4">
                     <Link
                       href={`/genres/${genre.fields.name.toLowerCase()}`}
@@ -98,57 +165,41 @@ const GenresPage = () => {
               ))}
             </div>
 
-            {/* Navigacija stranica */}
-            <div className="flex justify-center space-x-6 mt-6">
+            {/* Pagination buttons */}
+            <div className="flex justify-center space-x-4 mt-6 flex-wrap">
               <button
                 onClick={() => setPage(page - 1)}
                 disabled={page === 1}
-                className={`px-4 py-2 rounded-md ${
+                className={`px-3 py-1 rounded-md ${
                   page === 1
                     ? "bg-gray-300 cursor-not-allowed"
                     : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
-                }`}
+                } text-xs sm:text-sm`}
               >
                 Previous
               </button>
-              <span className="text-gray-700 font-semibold flex items-center justify-center">
+              <span className="text-gray-700 font-semibold flex items-center justify-center text-xs sm:text-sm whitespace-nowrap">
                 Page {page} of {totalPages}
               </span>
               <button
                 onClick={() => setPage(page + 1)}
                 disabled={page === totalPages}
-                className={`px-4 py-2 rounded-md ${
+                className={`px-3 py-1 rounded-md ${
                   page === totalPages
                     ? "bg-gray-300 cursor-not-allowed"
                     : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
-                }`}
+                } text-xs sm:text-sm`}
               >
                 Next
               </button>
             </div>
           </div>
 
-          {/* Desni div: Popis svih žanrova */}
-          <div className="bg-gray-100 p-6 rounded-lg shadow-md border">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4">
-              All Genres
-            </h2>
-
-            <ul className="grid grid-cols-2 gap-x-6 gap-y-4">
-              {genres.map((genre, index) => (
-                <li key={`${genre.sys.id}-${index}`} className="border-b pb-2">
-                  <Link
-                    href={`/genres/${genre.fields.name
-                      .toLowerCase()
-                      .replace(/\s+/g, "-")}`}
-                  >
-                    <span className="text-gray-800 hover:text-blue-500 transition">
-                      {genre.fields.name}
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Right div - genres list sidebar, center on mobile */}
+          <div className="flex justify-center md:justify-start">
+            <div className="w-full md:w-auto">
+              <GenresList genres={filteredGenres} />
+            </div>
           </div>
         </div>
       )}
