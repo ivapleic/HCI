@@ -1,5 +1,5 @@
 import contentfulClient from "@/lib/contentfulClient";
-import { TypeBooksSkeleton } from "@/content-types";
+import { TypeBooksSkeleton,TypeSeriesSkeleton } from "@/content-types";
 
 // Funkcija za dohvat ID-a žanra prema imenu
 export const getGenreById = async (genreName: string) => {
@@ -93,6 +93,40 @@ export const getBookById = async (bookId: string) => {
     return entry; // pun objekt: uključuje sys, fields, reference (ako su resolve-ane)
   } catch (error) {
     console.error("Greška pri dohvaćanju knjige po ID-u:", error);
+    return null;
+  }
+};
+
+// Funkcija za dohvat svih serijala
+export const getSeriesList = async () => {
+  try {
+    const data = await contentfulClient.withoutUnresolvableLinks.getEntries<TypeSeriesSkeleton>({
+      content_type: "series",
+      select: ["fields", "sys.id"],
+      include: 2, 
+    });
+
+    return data.items; 
+  } catch (error) {
+    console.error("Greška pri dohvaćanju serijala:", error);
+    return [];
+  }
+};
+
+// Funkcija koja dohvaća seriju kojoj pripada knjiga po ID-u knjige
+export const getSeriesByBookId = async (bookId: string) => {
+  try {
+    // Dohvati sve serije
+    const allSeries = await getSeriesList();
+
+    // Pronađi seriju u kojoj je data knjiga
+    const foundSeries = allSeries.find((series) =>
+      series.fields.books?.some((bookRef: any) => bookRef.sys.id === bookId)
+    );
+
+    return foundSeries || null;
+  } catch (error) {
+    console.error("Greška pri pronalasku serije za knjigu:", error);
     return null;
   }
 };

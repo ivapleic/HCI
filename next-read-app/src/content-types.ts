@@ -67,3 +67,18 @@ export interface TypeTagFields {
 
 export type TypeTagSkeleton = EntrySkeletonType<TypeTagFields, "tag">;
 export type TypeTag<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeTagSkeleton, Modifiers, Locales>;
+
+export interface TypeSeriesFields {
+  title: EntryFieldTypes.Symbol;
+  author: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeAuthorSkeleton>>;
+  books: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeBooksSkeleton>>;
+  description?: EntryFieldTypes.RichText;
+  coverImage?: EntryFieldTypes.AssetLink;
+  genres?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeGenreSkeleton>>;
+}
+
+export type TypeSeriesSkeleton = EntrySkeletonType<TypeSeriesFields, "series">;
+export type TypeSeries<
+  Modifiers extends ChainModifiers,
+  Locales extends LocaleCode = LocaleCode
+> = Entry<TypeSeriesSkeleton, Modifiers, Locales>;

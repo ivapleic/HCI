@@ -73,7 +73,8 @@ export default function NewReleasesPage() {
     }
   }, [genreName, router]);
 
-  if (loading) return <div className="text-center mt-12">Loading...</div>;
+  if (loading)
+    return <div className="text-center mt-12">Loading...</div>;
 
   if (books.length === 0)
     return (
@@ -83,77 +84,87 @@ export default function NewReleasesPage() {
     );
 
   return (
-    <div className="max-w-[1200px] mx-auto p-4 md:p-10">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-        {/* Lijevi blok: po gušćem rasporedu i sa svijetlom pozadinom */}
-        <div className="md:col-span-2 space-y-4 bg-white p-6 rounded-lg shadow-md border">
-          <h2 className="text-2xl font-bold mb-4 text-[#593e2e]">
+    <div className="md:max-w-[1200px] md:mx-auto p-0 md:p-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-10">
+        {/* Lijevi blok: New Releases lista */}
+        <div
+          className="
+            w-full
+            md:col-span-2
+            space-y-4
+            bg-white
+            p-0
+            md:p-6
+            rounded-none
+            md:rounded-lg
+            shadow-none
+            md:shadow-md
+            border-none
+            md:border
+            mb-4
+          "
+        >
+          <h2 className="text-2xl font-bold mb-4 text-[#593e2e] px-4 md:px-0 pt-4 md:pt-0">
             New Releases
           </h2>
           {books.slice(0, 10).map((book: any) => (
             <div
               key={book.sys.id}
-              className="flex items-start justify-between bg-white  rounded-xl p-4"
+              className="relative flex items-start gap-3 bg-white rounded-none md:rounded-xl p-3 md:p-4 shadow-none"
             >
               <img
                 onClick={() => router.push(`/books/${book.sys.id}`)}
                 src={book.fields.coverImage?.fields.file.url}
                 alt={book.fields.title}
-                className="w-24 h-32 object-cover rounded-md mr-6 cursor-pointer hover:opacity-80 transition"
+                className="w-20 h-28 md:w-24 md:h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition flex-shrink-0"
               />
-              <div className="flex-1">
+              <div className="flex-1 flex flex-col">
                 <h3
                   onClick={() => router.push(`/books/${book.sys.id}`)}
-                  className="text-xl font-semibold text-gray-900 mb-1 cursor-pointer hover:text-[#593e2e] hover:underline"
+                  className="text-lg md:text-xl font-semibold text-gray-900 cursor-pointer hover:text-[#593e2e] hover:underline"
                 >
                   {book.fields.title}
                 </h3>
-
-                <p className="text-sm text-gray-700 mb-2">
+                <div className="text-[15px] text-gray-700 mt-1 flex items-center mb-1">
                   by{" "}
                   {book.fields.author?.fields.fullName ? (
                     <Link
                       href={`/author/${book.fields.author.sys.id}`}
-                      className="text-gray-700 hover:underline"
+                      className="ml-1 text-gray-700 hover:underline"
                     >
                       {book.fields.author.fields.fullName}
                     </Link>
                   ) : (
-                    "Unknown Author"
+                    <span className="ml-1">Unknown Author</span>
                   )}
-                </p>
-                <p className="text-sm text-gray-600 line-clamp-2 max-w-xl">
+                </div>
+                <p className="text-sm text-gray-600 line-clamp-2 mb-2">
                   {book.fields.description || "No description available."}
                 </p>
-              </div>
-              {/* Dropdown meni */}
-              <div className="relative">
-                <details className="dropdown">
-                  <summary className="btn bg-[#593E2E] text-white px-3 py-1 rounded-md cursor-pointer text-lg leading-none">
+                {/* Botun na mobitelu ispod opisa, na desktopu uopće ne prikazuj ovdje */}
+                <div className="block md:hidden">
+                  <button className="btn bg-[#593E2E] text-white px-3 py-1 rounded-md cursor-pointer text-lg leading-none">
                     +
-                  </summary>
-                  <ul className="dropdown-content menu p-2 shadow bg-white rounded-box w-40 mt-2 border z-10">
-                    <li>
-                      <button className="text-left w-full">Option 1</button>
-                    </li>
-                    <li>
-                      <button className="text-left w-full">Option 2</button>
-                    </li>
-                    <li>
-                      <button className="text-left w-full">Option 3</button>
-                    </li>
-                  </ul>
-                </details>
+                  </button>
+                </div>
+              </div>
+              {/* Botun u gornjem desnom kutu diva na desktopu */}
+              <div className="hidden md:block absolute top-4 right-4">
+                <button className="btn bg-[#593E2E] text-white px-3 py-1 rounded-md cursor-pointer text-lg leading-none">
+                  +
+                </button>
               </div>
             </div>
           ))}
         </div>
 
-        {/* Desni blok: Genres list sidebar */}
-        <div>
-          <GenresList genres={genres} />
+        {/* Desni blok */}
+          <div className="flex justify-center md:justify-start mb-4">
+            <div className="w-full md:w-auto">
+              <GenresList genres={genres} />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
   );
 }

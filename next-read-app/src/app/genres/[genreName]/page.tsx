@@ -75,14 +75,27 @@ export default function GenrePage() {
   const description = genre?.fields?.description || "No description available.";
 
   return (
-    <div className="w-full my-4 px-4 md:px-20 mx-auto max-w-[1200px] flex justify-center">
+    <div
+      id="page-top"
+      className="
+        w-full
+        mt-4
+        mb-4
+        px-0
+        md:px-20
+        mx-0
+        md:mx-auto
+        md:max-w-[1200px]
+        flex
+        justify-center
+      "
+    >
       {loading ? (
         <div className="text-center text-lg">Loading...</div>
       ) : (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 w-full">
-            {/* Left div with breadcrumb inside, above genre heading */}
-            <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border max-h-full">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 justify-center mx-auto md:justify-normal w-full">
+          <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border">
               {/* Breadcrumb inside left div above heading */}
               <div className="mb-4 text-gray-600 text-sm select-none flex flex-wrap gap-2">
                 <Link
