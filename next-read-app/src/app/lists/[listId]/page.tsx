@@ -1,96 +1,95 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { getSeriesById } from "@/app/series/_lib/SeriesApi";
+import { useParams, useRouter } from "next/navigation";
+import { getListById } from "@/app/lists/_lib/ListApi";
+import { getAllTags } from "@/app/tags/_lib/TagsApi";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-const SeriesDetailPage = () => {
-  const { seriesId } = useParams();
+const ListDetailPage = () => {
+  const { listId } = useParams();
   const router = useRouter();
-
-  const [series, setSeries] = useState<any>(null);
+  const [list, setList] = useState<any>(null);
   const [tags, setTags] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchSeriesAndTags = async () => {
+    const fetchListAndTags = async () => {
       try {
         setLoading(true);
-        if (!seriesId) {
-          setSeries(null);
-          setLoading(false);
-          return;
+        const fetchedList = await getListById(listId as string);
+        const allTags = await getAllTags();
+
+        if (fetchedList) {
+          setList(fetchedList);
         }
-        const fetchedSeries = await getSeriesById(
-          Array.isArray(seriesId) ? seriesId[0] : seriesId
-        );
-        setSeries(fetchedSeries);
+        setTags(allTags);
       } catch (error) {
-        console.error("Error fetching series or tags:", error);
+        console.error("Error fetching list or tags:", error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchSeriesAndTags();
-  }, [seriesId]);
+    fetchListAndTags();
+  }, [listId]);
 
   if (loading) {
-    return <div className="text-center text-lg">Loading series details...</div>;
+    return <div className="text-center text-lg mt-12">Loading list details...</div>;
   }
 
-  if (!series) {
-    return <div className="text-center text-red-500">Series not found.</div>;
+  if (!list) {
+    return <div className="text-center text-red-500 mt-12">List not found.</div>;
   }
 
   return (
-    <div className="w-full my-4 px-4 md:px-10 lg:px-20">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="md:max-w-[1200px] md:mx-auto p-4 md:p-10">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
         {/* Glavni sadržaj */}
         <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border">
-          <h2 className="text-3xl font-bold text-[#593E2E] mb-6">
-            {series.fields.title}
-          </h2>
+          <h2 className="text-3xl font-bold text-[#593E2E] mb-6">{list.fields.name}</h2>
 
-          {/* Opis serijala */}
+          {/* Opis liste */}
           <div className="mb-10 prose max-w-none">
-            {series.fields.description
-              ? documentToReactComponents(series.fields.description)
-              : null}
+            {list.fields.description ? documentToReactComponents(list.fields.description) : null}
           </div>
 
-          {/* Knjige u serijalu */}
+          {/* Knjige u listi */}
           <div className="space-y-6">
-            {series.fields.books?.map((book: any, index: number) => (
+            {list.fields.books?.map((book: any) => (
               <div
-                key={index}
-                className="flex items-start justify-between bg-white shadow-md border rounded-xl p-4"
+                key={book.sys.id}
+                className="relative flex items-start gap-3 bg-white rounded-xl p-4 shadow-md border"
               >
-                <div className="flex flex-1">
-                  <img
-                    onClick={() => router.push(`/books/${book.sys.id}`)}
-                    src={book.fields.coverImage?.fields.file.url}
-                    alt={book.fields.title}
-                    className="w-24 h-32 object-cover rounded-md mr-4 cursor-pointer hover:opacity-80 transition"
-                  />
-                  <div>
-                    <h3
-                      onClick={() => router.push(`/books/${book.sys.id}`)}
-                      className="text-xl font-semibold text-gray-900 mb-1 cursor-pointer hover:text-[#593E2E]"
+                <img
+                  onClick={() => router.push(`/books/${book.sys.id}`)}
+                  src={book.fields.coverImage?.fields.file.url}
+                  alt={book.fields.title}
+                  className="w-20 h-28 md:w-24 md:h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition flex-shrink-0"
+                />
+                <div className="flex flex-col flex-1">
+                  <Link
+                    href={`/books/${book.sys.id}`}
+                    className="text-lg md:text-xl font-semibold text-gray-900 cursor-pointer hover:text-[#593E2E] hover:underline"
+                  >
+                    {book.fields.title}
+                  </Link>
+
+                  {book.fields.author?.fields.fullName ? (
+                    <Link
+                      href={`/author/${book.fields.author.sys.id}`}
+                      className="text-[15px] text-gray-700 mt-1 mb-1 cursor-pointer hover:underline"
                     >
-                      {book.fields.title}
-                    </h3>
-                    <p className="text-sm text-gray-700 mb-1">
-                      by{" "}
-                      {book.fields.author?.fields.fullName || "Unknown Author"}
-                    </p>
-                    <p className="text-sm text-gray-600 line-clamp-2 max-w-xl">
-                      {book.fields.description}
-                    </p>
-                  </div>
+                      by {book.fields.author.fields.fullName}
+                    </Link>
+                  ) : (
+                    <p className="text-[15px] mt-1 mb-1 text-gray-700">by Unknown Author</p>
+                  )}
+
+                  <p className="text-sm text-gray-600 line-clamp-2 max-w-xl">
+                    {book.fields.description || "No description available."}
+                  </p>
                 </div>
 
                 {/* Dropdown meni */}
@@ -117,20 +116,18 @@ const SeriesDetailPage = () => {
           </div>
         </div>
 
-        {/* Sidebar s tagovima */}
+        {/* Desni sidebar s tagovima */}
         <div className="bg-gray-100 p-6 rounded-lg shadow-md border">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">
-            Browse by Tags
-          </h2>
-
+          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 mb-4">Browse by Tags</h2>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-4">
             {tags.length > 0 ? (
               tags.map((tag: any) => (
                 <li key={tag.sys.id} className="border-b pb-2">
-                  <Link href={`/tags/${tag.fields.tagName.toLowerCase()}`}>
-                    <a className="text-gray-800 hover:text-blue-500 transition">
-                      {tag.fields.tagName}
-                    </a>
+                  <Link
+                    href={`/tags/${tag.fields.tagName.toLowerCase()}`}
+                    className="text-gray-800 hover:text-blue-500 transition"
+                  >
+                    {tag.fields.tagName}
                   </Link>
                 </li>
               ))
@@ -144,4 +141,4 @@ const SeriesDetailPage = () => {
   );
 };
 
-export default SeriesDetailPage;
+export default ListDetailPage;

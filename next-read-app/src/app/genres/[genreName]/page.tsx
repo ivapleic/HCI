@@ -95,7 +95,7 @@ export default function GenrePage() {
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 justify-center mx-auto md:justify-normal w-full">
-          <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border">
+            <div className="md:col-span-2 bg-white p-6 rounded-lg shadow-md border">
               {/* Breadcrumb inside left div above heading */}
               <div className="mb-4 text-gray-600 text-sm select-none flex flex-wrap gap-2">
                 <Link
@@ -123,7 +123,9 @@ export default function GenrePage() {
               {/* New Releases Section */}
               <div className="mb-10">
                 <h2 className="text-xl font-bold mb-4 text-[#593e2e] cursor-pointer">
-                 <Link href={`/new-releases?genre=${genreName}`}>New Releases</Link>
+                  <Link href={`/new-releases?genre=${genreName}`}>
+                    New Releases
+                  </Link>
                 </h2>
                 <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                   {(() => {
@@ -185,18 +187,18 @@ export default function GenrePage() {
                       >
                         <div className="w-full bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col items-center transition-all duration-200 hover:shadow-lg">
                           {/* Slike knjiga u listi */}
-                          <div className="flex gap-2 mb-3 justify-center flex-wrap">
-                            {list.fields.books?.length ? (
+                          <div className="flex gap-2 mb-2 justify-start flex-wrap">
+                            {list.fields.books?.length > 0 ? (
                               list.fields.books
                                 .slice(0, 3)
-                                .map((book: any, idx: any) => (
+                                .map((book: any, idx: number) => (
                                   <img
                                     key={idx}
                                     src={
                                       book.fields.coverImage?.fields.file.url
                                     }
                                     alt={book.fields.title}
-                                    className="object-cover rounded-md shadow w-20 h-22"
+                                    className="object-cover rounded-md shadow-md w-20 h-28"
                                   />
                                 ))
                             ) : (
@@ -205,6 +207,7 @@ export default function GenrePage() {
                               </p>
                             )}
                           </div>
+
                           {/* Naslov liste */}
                           <h3 className="text-center text-[15px] font-bold text-gray-900 mt-1 group-hover:text-[#8c6954] transition-colors duration-200">
                             {list.fields.name}
