@@ -61,15 +61,13 @@ const SeriesPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Glavni sadržaj */}
         <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-md border">
-          <h1 className="text-xl sm:text-2xl md:text-3xl text-[#593E64] font-bold tracking-tight text-left mb-6">
-            Series
-          </h1>
+         
           {seriesId && currentSeries && (
             <>
               {/* Prikaz detaljnog serijala */}
-              <h2 className="text-2xl mb-1 font-semibold text-[#593E64]">
+              <h1 className="text-2xl mb-1 font-semibold text-[#593E64]">
                 {currentSeries.fields.title}
-              </h2>
+              </h1>
 
               {currentSeries.fields.description && (
                 <div className="prose max-w-none mb-10">

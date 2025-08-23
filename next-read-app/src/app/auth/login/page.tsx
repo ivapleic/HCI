@@ -1,7 +1,9 @@
-"use client"
+"use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {LoginUser} from '@/lib/auth';
+import { loginUser } from "@/lib/auth";
+import { useAuth } from "@/lib/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -10,6 +12,7 @@ const LoginPage = () => {
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,21 +24,38 @@ const LoginPage = () => {
     setLoading(false);
 
     if (user) {
-      console.log("User logged in:", user);
-      router.push("/"); // preusmjeri na početnu ili drugu stranicu
+      // sigurnije mapiranje koji osigurava da email i fullName budu stringovi
+      const safeUser = {
+        id: user.id,
+        email:
+          typeof user.email === "string" && user.email !== null
+            ? user.email
+            : "",
+        fullName:
+          typeof user.fullName === "string" && user.fullName !== null
+            ? user.fullName
+            : "",
+      };
+      login(safeUser);
+      alert(`Uspješno prijavljen: ${safeUser.fullName}`);
+      router.push("/");
     } else {
       setErrorMsg("Invalid email or password");
     }
   };
-
   return (
     <div className="h-screen flex mt-20 items-start justify-center bg-gray-100">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
-        <h1 className="text-3xl font-bold mb-5 text-[#593E2E] text-center">Login</h1>
+        <h1 className="text-3xl font-bold mb-5 text-[#593E2E] text-center">
+          Login
+        </h1>
 
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
-            <label htmlFor="email" className="block text-md font-bold mb-1 text-[#593E2E]">
+            <label
+              htmlFor="email"
+              className="block text-md font-bold mb-1 text-[#593E2E]"
+            >
               Email
             </label>
             <input
@@ -51,7 +71,10 @@ const LoginPage = () => {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-md font-bold mb-1 text-[#593E2E]">
+            <label
+              htmlFor="password"
+              className="block text-md font-bold mb-1 text-[#593E2E]"
+            >
               Password
             </label>
             <input
@@ -68,7 +91,9 @@ const LoginPage = () => {
           </div>
 
           {errorMsg && (
-            <p className="text-red-600 mb-4 text-center font-semibold">{errorMsg}</p>
+            <p className="text-red-600 mb-4 text-center font-semibold">
+              {errorMsg}
+            </p>
           )}
 
           <button

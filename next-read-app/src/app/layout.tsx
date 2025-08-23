@@ -1,27 +1,18 @@
-"use client"
 import "./globals.css";
 import Footer from "./components/Footer/Footer";
-import { Navbar} from "./components/Navbar/Navbar";
+import { Navbar } from "./components/Navbar/Navbar";
+import { AuthProvider } from "@/lib/AuthContext";
 
-import { usePathname } from "next/navigation";  
-
-const RootLayout = ({ children }: { children: React.ReactNode }) => {
-  const pathname = usePathname();  // Get the current pathname
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/assets/favicon.ico" />
-      </head>
       <body className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow p-0 m-0 md:p-4 md:m-0">
-          {children} 
-        </main>
-        <Footer />  
+        <AuthProvider>
+          <Navbar />
+          <main className="flex-grow p-0 m-0 md:p-4 md:m-0">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );
-};
-
-export default RootLayout;
+}

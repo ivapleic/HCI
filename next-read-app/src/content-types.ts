@@ -47,14 +47,18 @@ export type TypeListSkeleton = EntrySkeletonType<TypeListFields, "list">;
 export type TypeList<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeListSkeleton, Modifiers, Locales>;
 
 export interface TypeUserFields {
-    fullName: EntryFieldTypes.Symbol;
-    email: EntryFieldTypes.Symbol;
-    password: EntryFieldTypes.Symbol;
-    profilePicture?: EntryFieldTypes.AssetLink;
-    bio?: EntryFieldTypes.Text;
-    favoriteGenres?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeGenreSkeleton>>;
-    joinedDate: EntryFieldTypes.Date;
-    accountStatus: EntryFieldTypes.Boolean;
+  fullName: EntryFieldTypes.Symbol;
+  email: EntryFieldTypes.Symbol;
+  password: EntryFieldTypes.Symbol;
+  profilePicture?: EntryFieldTypes.AssetLink;
+  bio?: EntryFieldTypes.Text;
+  favoriteGenres?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeGenreSkeleton>>;
+  joinedDate: EntryFieldTypes.Date;
+  accountStatus: EntryFieldTypes.Boolean;
+  favourites?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeBooksSkeleton>>;
+  wantToRead?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeBooksSkeleton>>;
+  readBooks?: EntryFieldTypes.Array<EntryFieldTypes.EntryLink<TypeBooksSkeleton>>;
+  currentlyReading?: EntryFieldTypes.EntryLink<TypeBooksSkeleton>;
 }
 
 export type TypeUserSkeleton = EntrySkeletonType<TypeUserFields, "user">;

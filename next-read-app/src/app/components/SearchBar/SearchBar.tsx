@@ -1,51 +1,157 @@
-// SearchBar.tsx
+"use client";
+
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
+import {
+  searchBooksAuthorsSeriesLists,
+  SearchResultItem,
+  AuthorSearchResultItem,
+  BookSearchResultItem,
+} from "@/app/search/_lib/SearchApi";
 
 interface SearchBarProps {
-  onSearchPath: (path: string) => void;
   className?: string;
 }
 
-const SearchBar = ({ onSearchPath, className = "" }: SearchBarProps) => {
-  const [searchInput, setSearchInput] = useState("");
+const PLACEHOLDER_IMG = "/placeholder_book.png";
 
-  const handleSearch = () => {
-    const trimmed = searchInput.trim();
-    if (/^\d+$/.test(trimmed)) {
-      onSearchPath(`/author/${trimmed}`);
-    } else if (trimmed) {
-      onSearchPath(`/book/${trimmed}`);
-    } else {
-      alert("Please enter a valid book title or author ID.");
+export default function SearchBar({ className = "" }: SearchBarProps) {
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState<SearchResultItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  async function fetchSearchResults(q: string) {
+    if (q.trim() === "") {
+      setResults([]);
+      setShowDropdown(false);
+      setLoading(false);
+      return;
     }
-  };
 
- return (
-  <div
-    className={`flex items-center bg-[#F9F3EE] rounded-lg px-3 py-2 ${className}`}
-  >
-    <input
-      type="text"
-      placeholder="Search books or authors..."
-      value={searchInput}
-      onChange={(e) => setSearchInput(e.target.value)}
-      onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-      className="flex-1 bg-transparent border-none text-sm focus:outline-none"
-    />
-    <Link href="#">
-      <Image
-        src="/assets/icons8-search-50 (1).png"
-        alt="Search"
-        width={24}
-        height={24}
-        onClick={handleSearch}
-        className="ml-2 cursor-pointer w-6 h-6"
+    setLoading(true);
+    setResults([]);
+    setShowDropdown(true);
+
+    try {
+      const data = await searchBooksAuthorsSeriesLists(q, 6);
+      setResults(data);
+      setShowDropdown(true);
+    } catch {
+      setResults([]);
+      setShowDropdown(true);
+    }
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    const debounce = setTimeout(() => {
+      fetchSearchResults(query);
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [query]);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setShowDropdown(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  function handleSearch() {
+    if (!query.trim()) return;
+    window.location.href = `/search?q=${encodeURIComponent(query.trim())}`;
+  }
+
+  return (
+    <div className={`relative ${className}`} ref={containerRef}>
+      <input
+        type="text"
+        value={query}
+        placeholder="Search books or authors..."
+        onChange={(e) => {
+          setQuery(e.target.value);
+          setShowDropdown(true);
+        }}
+        onFocus={() => setShowDropdown(true)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            handleSearch();
+          }
+        }}
+        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#593E2E]"
+        aria-label="Search books or authors"
       />
-    </Link>
-  </div>
-);
-};
+      <button
+        onClick={handleSearch}
+        className="absolute top-2 right-2 text-gray-600 hover:text-[#593E2E]"
+        aria-label="Search"
+      >
+        🔍
+      </button>
 
-export default SearchBar;
+      {showDropdown && query.trim() && (
+        <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded shadow-lg max-h-80 overflow-auto p-0">
+          {loading && <li className="p-2 text-center text-gray-500">Loading...</li>}
+          {!loading && results.length === 0 && (
+            <li className="p-2 text-center text-gray-500">No results found</li>
+          )}
+          {!loading &&
+            results.map((item) => {
+              const imgSrc =
+                item.type === "book"
+                  ? (item as BookSearchResultItem).imageUrl || PLACEHOLDER_IMG
+                  : item.type === "author"
+                  ? (item as AuthorSearchResultItem).profileImageUrl || PLACEHOLDER_IMG
+                  : PLACEHOLDER_IMG;
+
+              return (
+                <li
+                  key={item.id}
+                  className="flex items-center gap-3 px-3 py-2 hover:bg-[#faf3ec] cursor-pointer border-b last:border-none border-gray-100 transition"
+                >
+                  <Link
+                    href={item.href}
+                    className="flex items-center gap-3 w-full"
+                    onClick={() => setShowDropdown(false)} // Zatvori dropdown na klik
+                  >
+                    <img
+                      src={imgSrc}
+                      alt={item.title}
+                      className="w-12 h-12 object-cover rounded shadow"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-[#593E2E]">{item.title}</span>
+                      {item.subtitle && (
+                        <span className="text-sm text-gray-600">
+                          by {item.subtitle}
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
+          {!loading && results.length > 0 && (
+            <li
+              className="text-center p-2 bg-white text-[#593E2E] font-semibold cursor-pointer border-t border-gray-200 hover:bg-[#fbeee4] transition"
+              onMouseDown={() => {
+                setShowDropdown(false);
+                handleSearch();
+              }}
+            >
+              Show all results for "{query}"
+            </li>
+          )}
+        </ul>
+      )}
+    </div>
+  );
+}
