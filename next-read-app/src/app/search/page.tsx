@@ -14,7 +14,7 @@ export default function SearchPage() {
   const [results, setResults] = useState<SearchResultItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const resultsPerPage = 10;
+  const resultsPerPage = 6;
 
   useEffect(() => {
     async function fetchResults() {
@@ -24,19 +24,18 @@ export default function SearchPage() {
         return;
       }
       setLoading(true);
-      const r = await searchBooksAuthorsSeriesLists(query, 100); // Uzmi dovoljno rezultata za paginaciju
+      const r = await searchBooksAuthorsSeriesLists(query, 100); // dovoljno za paginaciju
       setResults(r);
       setLoading(false);
-      setCurrentPage(1); // Resetiraj stranicu kad se query promijeni
+      setCurrentPage(1);
     }
     fetchResults();
   }, [query]);
 
-  // Izračunaj paginirane rezultate
+  // Paginacija
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
   const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
-
   const totalPages = Math.ceil(results.length / resultsPerPage);
 
   function handlePageChange(newPage: number) {
@@ -46,7 +45,7 @@ export default function SearchPage() {
   return (
     <div className="max-w-5xl mx-auto p-6">
       <SearchBar className="mb-6" />
-      
+
       {loading && <p>Loading results...</p>}
       {!loading && results.length === 0 && <p>No results found for “{query}”</p>}
 
@@ -59,8 +58,9 @@ export default function SearchPage() {
                   id: item.id,
                   title: item.title,
                   coverImageUrl: (item as any).imageUrl,
-                  authorName: (item as any).subtitle,
-                  description: item.description, 
+                  authorName: item.authorName,
+                  authorId: (item as any).authorId, // <-- SAD DODANO
+                  description: (item as any).description,
                 }}
               />
             ) : item.type === "author" ? (
@@ -77,7 +77,6 @@ export default function SearchPage() {
         ))}
       </ul>
 
-      {/* Simple Pagination Buttons */}
       {totalPages > 1 && (
         <div className="flex justify-center mt-8 space-x-2">
           {[...Array(totalPages)].map((_, i) => {

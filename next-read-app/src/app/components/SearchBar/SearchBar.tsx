@@ -14,6 +14,7 @@ interface SearchBarProps {
 }
 
 const PLACEHOLDER_IMG = "/placeholder_book.png";
+const DROPDOWN_LIMIT = 4; // <-- prikazujemo samo 4 rezultata u dropdownu
 
 export default function SearchBar({ className = "" }: SearchBarProps) {
   const [query, setQuery] = useState("");
@@ -36,7 +37,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
     setShowDropdown(true);
 
     try {
-      const data = await searchBooksAuthorsSeriesLists(q, 6);
+      const data = await searchBooksAuthorsSeriesLists(q, 10); // dohvatimo više za "Show all"
       setResults(data);
       setShowDropdown(true);
     } catch {
@@ -104,7 +105,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
             <li className="p-2 text-center text-gray-500">No results found</li>
           )}
           {!loading &&
-            results.map((item) => {
+            results.slice(0, DROPDOWN_LIMIT).map((item) => {
               const imgSrc =
                 item.type === "book"
                   ? (item as BookSearchResultItem).imageUrl || PLACEHOLDER_IMG
@@ -120,7 +121,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                   <Link
                     href={item.href}
                     className="flex items-center gap-3 w-full"
-                    onClick={() => setShowDropdown(false)} // Zatvori dropdown na klik
+                    onClick={() => setShowDropdown(false)}
                   >
                     <img
                       src={imgSrc}
@@ -129,9 +130,10 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                     />
                     <div className="flex flex-col">
                       <span className="font-semibold text-[#593E2E]">{item.title}</span>
-                      {item.subtitle && (
+                      {/* Prikaz autora samo ako postoji authorName */}
+                      {"authorName" in item && item.authorName && (
                         <span className="text-sm text-gray-600">
-                          by {item.subtitle}
+                          by {item.authorName}
                         </span>
                       )}
                     </div>
@@ -139,7 +141,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                 </li>
               );
             })}
-          {!loading && results.length > 0 && (
+          {!loading && results.length > DROPDOWN_LIMIT && (
             <li
               className="text-center p-2 bg-white text-[#593E2E] font-semibold cursor-pointer border-t border-gray-200 hover:bg-[#fbeee4] transition"
               onMouseDown={() => {

@@ -4,25 +4,29 @@ export interface SearchResultItemBase {
   id: string;
   type: "book" | "author";
   title: string;
-  subtitle?: string;
   href: string;
 }
 
 export interface BookSearchResultItem extends SearchResultItemBase {
   type: "book";
-  imageUrl?: string; // slika korice knjige
+  imageUrl?: string;
   description?: string;
   year?: number;
+  authorName?: string; // <-- novo polje
+  authorId?: string;   // <-- novo polje
 }
 
 export interface AuthorSearchResultItem extends SearchResultItemBase {
   type: "author";
-  profileImageUrl?: string; // profilna slika autora
+  profileImageUrl?: string;
 }
 
 export type SearchResultItem = BookSearchResultItem | AuthorSearchResultItem;
 
-export async function searchBooksAuthorsSeriesLists(query: string, limit = 5): Promise<SearchResultItem[]> {
+export async function searchBooksAuthorsSeriesLists(
+  query: string,
+  limit = 5
+): Promise<SearchResultItem[]> {
   console.log("Pozvana funkcija searchBooksAuthorsSeriesLists sa query:", query);
 
   if (!query.trim()) return [];
@@ -49,6 +53,8 @@ export async function searchBooksAuthorsSeriesLists(query: string, limit = 5): P
     const title = item.fields?.title;
 
     let authorName: string | undefined = undefined;
+    let authorId: string | undefined = undefined;
+
     const authorField = item.fields?.author;
     if (
       authorField &&
@@ -57,6 +63,7 @@ export async function searchBooksAuthorsSeriesLists(query: string, limit = 5): P
       typeof (authorField as any).fields.fullName === "string"
     ) {
       authorName = (authorField as any).fields.fullName;
+      authorId = (authorField as any).sys.id;
     }
 
     let imageUrl: string | undefined = undefined;
@@ -72,16 +79,19 @@ export async function searchBooksAuthorsSeriesLists(query: string, limit = 5): P
 
     if (typeof title !== "string" || !title.trim()) return;
 
-   results.push({
-  id: item.sys.id,
-  type: "book",
-  title,
-  subtitle: authorName,
-  imageUrl,
-  description: typeof item.fields.description === "string" ? item.fields.description : undefined, // sigurno
-  href: `/books/${item.sys.id}`,
-});
-
+    results.push({
+      id: item.sys.id,
+      type: "book",
+      title,
+      authorName,   // <-- novo polje
+      authorId,     // <-- novo polje
+      imageUrl,
+      description:
+        typeof item.fields.description === "string"
+          ? item.fields.description
+          : undefined,
+      href: `/books/${item.sys.id}`,
+    });
   });
 
   // Obradi autore
