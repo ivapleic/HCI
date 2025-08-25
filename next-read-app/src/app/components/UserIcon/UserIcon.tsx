@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/AuthContext";
+import { useAuth } from "../../../lib/AuthContext";
 
 const ProfileIcon = () => {
   const { user, logout } = useAuth(); // koristimo logout iz konteksta

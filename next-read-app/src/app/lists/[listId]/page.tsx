@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getListById } from "@/app/lists/_lib/ListApi";
-import { getAllTags } from "@/app/tags/_lib/TagsApi";
+import { getListById } from "../../lists/_lib/ListApi";
+import { getAllTags } from "../../tags/_lib/TagsApi";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import BookCard from "@/app/components/BookCard/BookCard";
+import BookCard from "../../components/BookCard/BookCard";
 
 const ListDetailPage = () => {
   const { listId } = useParams();

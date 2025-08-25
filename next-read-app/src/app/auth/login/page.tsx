@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/auth";
-import { useAuth } from "@/lib/AuthContext";
+import { loginUser } from "../../../lib/auth";
+import { useAuth } from "../../../lib/AuthContext";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");

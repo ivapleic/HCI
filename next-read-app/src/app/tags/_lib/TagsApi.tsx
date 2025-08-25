@@ -1,6 +1,6 @@
-import contentfulClient from "@/lib/contentfulClient";
+import contentfulClient from "../../../lib/contentfulClient";
 import { Entry } from "contentful";
-import { TypeTagSkeleton } from "@/content-types";
+import { TypeTagSkeleton } from "../../../content-types";
 
 // ✅ 1. Dohvaćanje svih tagova
 export const getAllTags = async (): Promise<Entry<TypeTagSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>[]> => {

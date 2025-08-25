@@ -1,5 +1,5 @@
-import contentfulClient from "@/lib/contentfulClient";
-import { TypeUserSkeleton } from "@/content-types";
+import contentfulClient from "../../../lib/contentfulClient";
+import { TypeUserSkeleton } from "../../../content-types";
 
 
 

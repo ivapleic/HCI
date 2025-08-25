@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Link from "next/link";
 import { getLists } from "./_lib/ListApi";
 import { getAllTags } from "../tags/_lib/TagsApi";
-import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
-import Pagination from "@/app/components/Pagination/Pagination";
+import ItemGrid from "../components/ItemGrid/ItemGrid";
+import Pagination from "../components/Pagination/Pagination";
 import TagList from "../components/TagsList/TagsList";
 
 const ListsPage = () => {

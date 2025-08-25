@@ -4,11 +4,11 @@ import { useState, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "../Logo/Logo";
-import { cn } from "@/lib/utils";
-import { useClickOutside } from "@/hooks/useClickOutside";
+import { cn } from "../../../lib/utils";
+import { useClickOutside } from "../../../hooks/useClickOutside";
 import SearchBar from "../SearchBar/SearchBar";
 import MegaMenu from "../MegaMenu/MegaMenu";
-import { useAuth } from "@/lib/AuthContext";
+import { useAuth } from "../../../lib/AuthContext";
 import ProfileIcon from "../UserIcon/UserIcon";
 
 export function Navbar() {

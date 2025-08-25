@@ -7,8 +7,7 @@ import {
   SearchResultItem,
   AuthorSearchResultItem,
   BookSearchResultItem,
-} from "@/app/search/_lib/SearchApi";
-
+} from "../../search/_lib/SearchApi";
 interface SearchBarProps {
   className?: string;
 }

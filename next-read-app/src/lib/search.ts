@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { searchBooksAuthorsSeriesLists, SearchResultItem } from "@/app/search/_lib/SearchApi";
+import { searchBooksAuthorsSeriesLists, SearchResultItem } from "../app/search/_lib/SearchApi";
 
 export default async function handler(
   req: NextApiRequest,

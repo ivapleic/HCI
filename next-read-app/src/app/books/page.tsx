@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getBooksByGenre } from "./_lib/booksApi";
-import { GetAuthorById } from "@/lib/api";
+import { GetAuthorById } from "../../lib/api";
 import { getGenreList } from "../genres/_lib/genresApi";
 
 const BooksPage = () => {

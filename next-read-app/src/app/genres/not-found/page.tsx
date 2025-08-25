@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import GenresList from "@/app/components/GenresList/GenresList";
+import GenresList from "../../components/GenresList/GenresList";
 import { useEffect, useState } from "react";
 import { getGenreList } from "../_lib/genresApi";
 

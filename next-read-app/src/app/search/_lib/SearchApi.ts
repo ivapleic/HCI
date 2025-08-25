@@ -1,4 +1,4 @@
-import contentfulClient from "@/lib/contentfulClient";
+import contentfulClient from "../../../lib/contentfulClient";
 
 export interface SearchResultItemBase {
   id: string;

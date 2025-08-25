@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { getSeriesList } from "../_lib/SeriesApi";
 import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import BookCard from "@/app/components/BookCard/BookCard";
+import BookCard from "../../components/BookCard/BookCard";
 
 const SeriesPage = () => {
   const { seriesId } = useParams();

@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSeriesByAuthorId, getAuthorById } from "../../_lib/AuthorApi";
 import Link from "next/link";
-import Pagination from "@/app/components/Pagination/Pagination";
+import Pagination from "../../../components/Pagination/Pagination";
 
 const AuthorSeriesPage = () => {
   const { authorId } = useParams();

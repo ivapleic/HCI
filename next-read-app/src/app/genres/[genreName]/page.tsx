@@ -5,9 +5,9 @@ import { notFound, useParams } from "next/navigation";
 import { getGenreList } from "../_lib/genresApi";
 import { useState, useEffect } from "react";
 import { getBooks } from "../_lib/genresApi";
-import { getLists } from "@/app/lists/_lib/ListApi";
-import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
-import GenresList from "@/app/components/GenresList/GenresList";
+import { getLists } from "../../lists/_lib/ListApi";
+import ItemGrid from "../../components/ItemGrid/ItemGrid";
+import GenresList from "../../components/GenresList/GenresList";
 
 export default function GenrePage() {
   const params = useParams();

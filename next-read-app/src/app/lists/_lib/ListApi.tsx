@@ -1,6 +1,6 @@
-import contentfulClient from "@/lib/contentfulClient";
+import contentfulClient from "../../../lib/contentfulClient";
 import { Entry } from "contentful";
-import { TypeGenreSkeleton,TypeAuthorSkeleton, TypeListSkeleton, TypeBooksSkeleton,TypeTagSkeleton } from "@/content-types";
+import { TypeAuthorSkeleton, TypeListSkeleton } from "../../../content-types";
 
 
 // ✅ 1. Dohvaćanje svih lista

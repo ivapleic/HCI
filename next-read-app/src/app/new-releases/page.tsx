@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { getBooks, getGenreList } from "../genres/_lib/genresApi";
 import GenresList from "../components/GenresList/GenresList";
 import BookCard from "../components/BookCard/BookCard";
-import Pagination from "@/app/components/Pagination/Pagination";
+import Pagination from "../components/Pagination/Pagination";
 
 export default function NewReleasesPage() {
   const searchParams = useSearchParams();

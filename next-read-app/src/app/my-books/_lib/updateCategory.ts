@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { addBookToUserCategory } from "@/lib/categoriesApi";
+import { addBookToUserCategory } from "../../../lib/categoriesApi";
 
 export async function POST(request: Request) {
   try {

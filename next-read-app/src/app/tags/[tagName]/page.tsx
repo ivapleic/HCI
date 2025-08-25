@@ -3,10 +3,10 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { getListsByTagName } from "@/app/lists/_lib/ListApi";
+import { getListsByTagName } from "../../lists/_lib/ListApi";
 import { getAllTags } from "../_lib/TagsApi";
-import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
-import Pagination from "@/app/components/Pagination/Pagination"; // import tvoje pagination komponente
+import ItemGrid from "../../components/ItemGrid/ItemGrid";
+import Pagination from "../../components/Pagination/Pagination"; 
 
 const TagPage = () => {
   const { tagName } = useParams();

@@ -1,6 +1,6 @@
-import contentfulClient from "@/lib/contentfulClient";
+import contentfulClient from "../../../lib/contentfulClient";
 import { Entry } from "contentful";
-import { TypeGenreSkeleton, TypeListSkeleton, TypeBooksSkeleton } from "@/content-types";
+import { TypeGenreSkeleton, TypeListSkeleton, TypeBooksSkeleton } from "../../../content-types";
 
 // ✅ 1. Dohvaćanje svih žanrova
 export const getGenreList = async (): Promise<

@@ -4,7 +4,7 @@ import { Entry } from "contentful";
 import {
   TypeGenreSkeleton,
   TypeListSkeleton,
-} from "@/content-types";
+} from "../content-types";
 
 export const getGenreList = async (): Promise<Entry<TypeGenreSkeleton, "WITHOUT_UNRESOLVABLE_LINKS", string>[]> => {
   try {

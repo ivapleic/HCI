@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getBooksByAuthorId, getAuthorById } from "../../_lib/AuthorApi";
-import BookCard from "@/app/components/BookCard/BookCard";
-import Pagination from "@/app/components/Pagination/Pagination";
+import BookCard from "../../../components/BookCard/BookCard";
+import Pagination from "../../../components/Pagination/Pagination";
 
 const AuthorBooksPage = () => {
   const rawAuthorId = useParams().authorId;

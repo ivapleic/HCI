@@ -1,5 +1,5 @@
-import contentfulClient from "@/lib/contentfulClient";
-import { TypeUserSkeleton } from "@/content-types";
+import contentfulClient from "../../../lib/contentfulClient";
+import { TypeUserSkeleton } from "../../../content-types";
 
 // Dohvat korisnika po ID-u
 export const getUserById = async (userId: string) => {

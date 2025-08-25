@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { getBookById, getSeriesByBookId } from "../_lib/booksApi"; // importaj novu funkciju
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import Link from "next/link";
-import CategoryDropdown from "@/app/components/CategoryDropdown/CategoryDropdown";
+import CategoryDropdown from "../../components/CategoryDropdown/CategoryDropdown";
 
 const BookDetailPage = () => {
   const { bookId } = useParams();

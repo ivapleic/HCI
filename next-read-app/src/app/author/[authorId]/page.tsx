@@ -8,8 +8,8 @@ import {
   getSeriesByAuthorId,
 } from "../_lib/AuthorApi";
 import Link from "next/link";
-import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
-import BookCard from "@/app/components/BookCard/BookCard";
+import ItemGrid from "../../components/ItemGrid/ItemGrid";
+import BookCard from "../../components/BookCard/BookCard";
 
 const AuthorPage = () => {
   const rawAuthorId = useParams().authorId;

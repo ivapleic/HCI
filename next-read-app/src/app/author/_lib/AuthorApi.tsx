@@ -1,6 +1,6 @@
 // app/_lib/authorsApi.ts
-import contentfulClient from "@/lib/contentfulClient";
-import { TypeAuthorSkeleton } from "@/content-types";
+import contentfulClient from "../../../lib/contentfulClient";
+import { TypeAuthorSkeleton } from "../../../content-types";
 
 // Dohvat autora po ID-u
 export const getAuthorById = async (authorId: string) => {

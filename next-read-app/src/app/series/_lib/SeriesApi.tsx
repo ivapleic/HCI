@@ -1,5 +1,5 @@
-import contentfulClient from "@/lib/contentfulClient";
-import { TypeBooksSkeleton,TypeSeriesSkeleton } from "@/content-types";
+import contentfulClient from "../../../lib/contentfulClient";
+import { TypeSeriesSkeleton } from "../../../content-types";
 
 
 // Funkcija za dohvat svih serijala
