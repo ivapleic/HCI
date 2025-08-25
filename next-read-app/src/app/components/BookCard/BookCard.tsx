@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import CategoryDropdown from "../CategoryDropdown/CategoryDropdown";
 
 export interface BookCardProps {
   book: {
@@ -18,21 +19,15 @@ export interface BookCardProps {
 export default function BookCard({ book, onCategoryChange }: BookCardProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const categories = ["To Read", "Completed"]; // Favourite je glavni gumb, ostale idu u dropdown
-
-  function toggleDropdown() {
-    setDropdownOpen((open) => !open);
-  }
-
-  function handleSelectCategory(category: string) {
-    setDropdownOpen(false);
-    if (onCategoryChange) onCategoryChange(category);
-  }
-
   const coverImageUrl = book.coverImageUrl ?? "/placeholder_book.png";
 
   return (
     <div className="relative flex items-start gap-3 p-4 bg-white rounded-xl shadow-md border hover:shadow-lg transition">
+      {/* Mjesto za CategoryDropdown u gornjem desnom kutu */}
+      <div className="absolute top-3 right-3 z-10">
+        <CategoryDropdown bookId={book.id} variant="icon"/>
+      </div>
+
       <Link href={`/books/${book.id}`} className="flex-shrink-0 cursor-pointer">
         <img
           src={coverImageUrl}
@@ -42,7 +37,6 @@ export default function BookCard({ book, onCategoryChange }: BookCardProps) {
       </Link>
 
       <div className="flex flex-col flex-1">
-        {/* Naslov knjige */}
         <Link
           href={`/books/${book.id}`}
           className="text-lg md:text-xl font-semibold text-gray-900 hover:text-[#593E2E] hover:underline cursor-pointer"
@@ -50,7 +44,6 @@ export default function BookCard({ book, onCategoryChange }: BookCardProps) {
           {book.title}
         </Link>
 
-        {/* Klikabilno ime autora (samo ako ima i authorId i authorName) */}
         {book.authorId && book.authorName ? (
           <Link
             href={`/author/${book.authorId}`}
@@ -64,37 +57,6 @@ export default function BookCard({ book, onCategoryChange }: BookCardProps) {
 
         {book.description && (
           <p className="text-sm text-gray-600 line-clamp-2">{book.description}</p>
-        )}
-      </div>
-
-      {/* Dropdown button */}
-      <div className="relative ml-2">
-        <button
-          onClick={toggleDropdown}
-          className={`flex items-center gap-1 px-3 py-1.5 text-sm rounded-md focus:outline-none transition ${
-            dropdownOpen
-              ? "bg-[#725040] text-white rounded-b-none"
-              : "bg-[#593E2E] text-white hover:bg-[#725040]"
-          }`}
-          aria-haspopup="true"
-          aria-expanded={dropdownOpen}
-          aria-label="Open categories menu"
-        >
-          Favourite <span className="text-xs">▼</span>
-        </button>
-
-        {dropdownOpen && (
-          <ul className="absolute right-0 w-36 bg-white border border-gray-300 rounded-b-md shadow-md z-10">
-            {categories.map((category) => (
-              <li
-                key={category}
-                className="px-4 py-2 text-sm cursor-pointer hover:bg-[#faf3ec]"
-                onClick={() => handleSelectCategory(category)}
-              >
-                {category}
-              </li>
-            ))}
-          </ul>
         )}
       </div>
     </div>

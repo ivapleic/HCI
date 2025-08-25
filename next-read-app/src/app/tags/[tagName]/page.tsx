@@ -1,9 +1,12 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import { getListsByTagName } from "@/app/lists/_lib/ListApi";
 import { getAllTags } from "../_lib/TagsApi";
+import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
+import Pagination from "@/app/components/Pagination/Pagination"; // import tvoje pagination komponente
 
 const TagPage = () => {
   const { tagName } = useParams();
@@ -11,11 +14,13 @@ const TagPage = () => {
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState<any[]>([]);
 
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
+
   useEffect(() => {
     const fetchListsAndTags = async () => {
       try {
         setLoading(true);
-
         const allTags = await getAllTags();
         setTags(allTags);
 
@@ -24,9 +29,10 @@ const TagPage = () => {
         if (tag) {
           const taggedLists = await getListsByTagName(tag);
           setFilteredLists(taggedLists);
+          setPage(1);
         } else {
-          console.error("No valid tag provided");
           setFilteredLists([]);
+          console.error("No valid tag provided");
         }
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -37,6 +43,18 @@ const TagPage = () => {
 
     fetchListsAndTags();
   }, [tagName]);
+
+  const totalPages = Math.ceil(filteredLists.length / itemsPerPage);
+
+  const displayedLists = filteredLists.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setPage(newPage);
+  };
 
   return (
     <div className="w-full my-4 px-4 md:px-10 lg:px-20">
@@ -50,41 +68,24 @@ const TagPage = () => {
               Lists for tag: <span className="text-red-700">{tagName}</span>
             </h1>
 
-            {filteredLists.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {filteredLists.map((list, index) => (
-                  <div
-                    key={index}
-                    className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 flex flex-col items-start"
-                  >
-                    <Link href={`/lists/${list.sys.id}`}>
-                      <div className="w-full">
-                        <div className="flex justify-center gap-4 mb-2 w-full">
-                          {list.fields.books?.length > 0 ? (
-                            list.fields.books
-                              .slice(0, 3)
-                              .map((book: any, idx: number) => (
-                                <img
-                                  key={idx}
-                                  src={book.fields.coverImage?.fields.file.url}
-                                  alt={book.fields.title}
-                                  className="object-cover rounded-md shadow-md w-24 h-32"
-                                />
-                              ))
-                          ) : (
-                            <p className="text-sm text-center w-full">
-                              No books available
-                            </p>
-                          )}
-                        </div>
-                        <h3 className="text-sm  text-center font-bold text-gray-900">
-                          {list.fields.name}
-                        </h3>
-                      </div>
-                    </Link>
-                  </div>
-                ))}
-              </div>
+            {displayedLists.length > 0 ? (
+              <>
+                <ItemGrid
+                  items={displayedLists}
+                  itemType="lists"
+                  maxDisplay={itemsPerPage}
+                  columns={2}
+                  moreLink={`/tags/${tagName}`}
+                  moreLabel="More lists with this genre"
+                  title=""
+                />
+                <Pagination
+                  totalItems={filteredLists.length}
+                  itemsPerPage={itemsPerPage}
+                  currentPage={page}
+                  onPageChange={handlePageChange}
+                />
+              </>
             ) : (
               <p className="text-gray-600">No lists available for this tag.</p>
             )}

@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSeriesByAuthorId, getAuthorById } from "../../_lib/AuthorApi";
 import Link from "next/link";
+import Pagination from "@/app/components/Pagination/Pagination";
 
 const AuthorSeriesPage = () => {
   const { authorId } = useParams();
@@ -11,7 +12,6 @@ const AuthorSeriesPage = () => {
   const [series, setSeries] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const seriesPerPage = 10;
 
@@ -33,18 +33,14 @@ const AuthorSeriesPage = () => {
 
   const { fields } = author;
 
-  // Paginate series
   const indexOfLastSerie = currentPage * seriesPerPage;
   const indexOfFirstSerie = indexOfLastSerie - seriesPerPage;
   const currentSeries = series.slice(indexOfFirstSerie, indexOfLastSerie);
   const totalPages = Math.ceil(series.length / seriesPerPage);
 
-  const handlePrev = () => {
-    setCurrentPage((prev) => (prev > 1 ? prev - 1 : prev));
-  };
-
-  const handleNext = () => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
   };
 
   return (
@@ -85,36 +81,12 @@ const AuthorSeriesPage = () => {
           </div>
         )}
 
-        {/* PAGINATION */}
-        {totalPages > 1 && (
-          <div className="flex justify-center mt-6 gap-4">
-            <button
-              onClick={handlePrev}
-              disabled={currentPage === 1}
-              className={`px-3 py-1 rounded border ${
-                currentPage === 1
-                  ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                  : "text-[#593E2E] border-[#593E2E] hover:bg-[#593E2E] hover:text-white transition"
-              }`}
-            >
-              Prev
-            </button>
-            <span className="flex items-center gap-1 text-sm">
-              Page <strong>{currentPage}</strong> of <strong>{totalPages}</strong>
-            </span>
-            <button
-              onClick={handleNext}
-              disabled={currentPage === totalPages}
-              className={`px-3 py-1 rounded border ${
-                currentPage === totalPages
-                  ? "text-gray-400 border-gray-300 cursor-not-allowed"
-                  : "text-[#593E2E] border-[#593E2E] hover:bg-[#593E2E] hover:text-white transition"
-              }`}
-            >
-              Next
-            </button>
-          </div>
-        )}
+        <Pagination
+          totalItems={series.length}
+          itemsPerPage={seriesPerPage}
+          currentPage={currentPage}
+          onPageChange={handlePageChange}
+        />
       </div>
     </div>
   );

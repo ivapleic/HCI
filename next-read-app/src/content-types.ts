@@ -30,6 +30,8 @@ export type TypeBooks<Modifiers extends ChainModifiers, Locales extends LocaleCo
 export interface TypeGenreFields {
     name: EntryFieldTypes.Symbol;
     description: EntryFieldTypes.Text;
+      coverImage: EntryFieldTypes.AssetLink;  
+
 }
 
 export type TypeGenreSkeleton = EntrySkeletonType<TypeGenreFields, "genre">;

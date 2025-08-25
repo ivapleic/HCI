@@ -5,15 +5,14 @@ import { useParams } from "next/navigation";
 import { getSeriesList } from "../_lib/SeriesApi";
 import Link from "next/link";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-// Pretpostavljam da imaš api/metodu za tagove, importaj ako postoji:
-// import { getAllTags } from "../_lib/TagsApi";
+import BookCard from "@/app/components/BookCard/BookCard";
 
 const SeriesPage = () => {
   const { seriesId } = useParams();
 
   const [seriesList, setSeriesList] = useState<any[]>([]);
   const [currentSeries, setCurrentSeries] = useState<any>(null);
-  const [tags, setTags] = useState<any[]>([]);
+   const [tags, setTags] = useState<any[]>([]); 
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const itemsPerPage = 5;
@@ -25,10 +24,6 @@ const SeriesPage = () => {
 
         const allSeries = await getSeriesList();
         setSeriesList(allSeries);
-
-        // Pretpostavljena funkcija za dohvata tagova
-        // const allTags = await getAllTags();
-        // setTags(allTags);
 
         if (seriesId) {
           const found = allSeries.find((s) => s.sys.id === seriesId);
@@ -47,10 +42,7 @@ const SeriesPage = () => {
 
   const displayedSeries = seriesId ? (currentSeries ? [currentSeries] : []) : seriesList;
   const totalPages = Math.ceil(displayedSeries.length / itemsPerPage);
-  const pagedSeries = displayedSeries.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const pagedSeries = displayedSeries.slice((page - 1) * itemsPerPage, page * itemsPerPage);
 
   if (loading) {
     return <div className="text-center">Loading list...</div>;
@@ -61,13 +53,10 @@ const SeriesPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Glavni sadržaj */}
         <div className="lg:col-span-3 bg-white p-6 rounded-lg shadow-md border">
-         
           {seriesId && currentSeries && (
             <>
-              {/* Prikaz detaljnog serijala */}
-              <h1 className="text-2xl mb-1 font-semibold text-[#593E64]">
-                {currentSeries.fields.title}
-              </h1>
+              {/* Detalji serijala */}
+              <h1 className="text-2xl mb-1 font-semibold text-[#593E64]">{currentSeries.fields.title}</h1>
 
               {currentSeries.fields.description && (
                 <div className="prose max-w-none mb-10">
@@ -75,50 +64,25 @@ const SeriesPage = () => {
                 </div>
               )}
 
-              {/* Knjige u serijalu */}
+              {/* Knjige u serijalu s BookCard komponentom */}
               <div className="space-y-6">
                 {currentSeries.fields.books?.map((book: any) => (
-                  <div
+                  <BookCard
                     key={book.sys.id}
-                    className="relative flex items-start gap-3 bg-white rounded-xl p-4 shadow-md border hover:shadow-lg transition"
-                  >
-                    <Link href={`/books/${book.sys.id}`} className="flex-shrink-0 cursor-pointer">
-                      <img
-                        src={book.fields.coverImage?.fields.file.url}
-                        alt={book.fields.title}
-                        className="w-20 h-28 md:w-24 md:h-32 object-cover rounded-md"
-                      />
-                    </Link>
-                    <div className="flex flex-col flex-1">
-                      <Link
-                        href={`/books/${book.sys.id}`}
-                        className="text-lg md:text-xl font-semibold text-gray-900 hover:text-[#593E2E] hover:underline cursor-pointer"
-                      >
-                        {book.fields.title}
-                      </Link>
-                      {book.fields.author?.fields?.fullName ? (
-                        <Link
-                          href={`/author/${book.fields.author.sys.id}`}
-                          className="text-sm text-gray-700 mt-1 mb-1 hover:underline"
-                        >
-                          by {book.fields.author.fields.fullName}
-                        </Link>
-                      ) : (
-                        <span className="text-sm text-gray-700 mt-1 mb-1">
-                          by Unknown Author
-                        </span>
-                      )}
-                      <p className="text-sm text-gray-600 line-clamp-2">
-                        {book.fields.description || "No description available."}
-                      </p>
-                    </div>
-                  </div>
+                    book={{
+                      id: book.sys.id,
+                      title: book.fields.title,
+                      coverImageUrl: book.fields.coverImage?.fields.file.url,
+                      authorName: book.fields.author?.fields?.fullName,
+                      authorId: book.fields.author?.sys.id,
+                      description: book.fields.description,
+                    }}
+                  />
                 ))}
               </div>
             </>
           )}
 
-          {/* Prikaz popisa serija (bez detalja) */}
           {!seriesId && (
             <>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -171,9 +135,7 @@ const SeriesPage = () => {
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
                     disabled={page === 1}
                     className={`px-4 py-2 rounded-md ${
-                      page === 1
-                        ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-[#593E64] text-white hover:bg-[#8B6E54]"
+                      page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-[#593E64] text-white hover:bg-[#8B6E54]"
                     }`}
                   >
                     Previous
@@ -185,9 +147,7 @@ const SeriesPage = () => {
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages}
                     className={`px-4 py-2 rounded-md ${
-                      page === totalPages
-                        ? "bg-gray-300 cursor-not-allowed"
-                        : "bg-[#593E64] text-white hover:bg-[#8B6E54]"
+                      page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-[#593E64] text-white hover:bg-[#8B6E54]"
                     }`}
                   >
                     Next
@@ -206,9 +166,7 @@ const SeriesPage = () => {
               tags.map((tag) => (
                 <li key={tag.sys.id} className="border-b border-gray-300 pb-2">
                   <Link href={`/tags/${tag.fields.tagName.toLowerCase()}`}>
-                    <span className="text-[#593E64] hover:text-[#8B6E54] transition-colors">
-                      {tag.fields.tagName}
-                    </span>
+                    <span className="text-[#593E64] hover:text-[#8B6E54] transition-colors">{tag.fields.tagName}</span>
                   </Link>
                 </li>
               ))

@@ -6,6 +6,20 @@ import Link from "next/link";
 import { getGenreList } from "@/lib/api";
 import { getAllBooks } from "./books/_lib/booksApi";
 
+// Dopuni ovo mapiranje prema svojim žanrovima!
+const GENRE_ICONS: Record<string, string> = {
+  "Science Fiction": "🚀",
+  Cookbooks: "👨‍🍳",
+  "Self Help": "🌱",
+  Psychology: "🧠",
+  Business: "💼",
+  History: "🏺",
+  Thriller: "🔪",
+  Mystery: "🕵️",
+  // fallback za ostale
+  default: "📚",
+};
+
 const HomePage = () => {
   const scrollersRef = useRef<HTMLElement | null>(null);
   const [genres, setGenres] = useState<any[]>([]);
@@ -37,7 +51,6 @@ const HomePage = () => {
     fetchBooks();
 
     const scrollers = scrollersRef.current?.querySelectorAll(".scroller");
-
     if (
       scrollers &&
       scrollers.length > 0 &&
@@ -69,9 +82,38 @@ const HomePage = () => {
   return (
     <main
       ref={scrollersRef}
-      className="flex items-center min-h-screen flex-col p-10 bg-[#F2F2F2]"
+      className="flex items-center min-h-screen flex-col px-6 md:p-10 bg-[#F2F2F2]"
     >
-      {/* ✅ Books Scroller */}
+      {/* HERO SEKCIJA */}
+      <div className="w-full max-w-screen-2xl rounded-xl overflow-hidden bg-gradient-to-tl from-[#f2cab3]/30 to-[#fff]/5 shadow mb-8 p-8 flex flex-col md:flex-row items-center justify-between">
+        <div className="flex-1 pr-8">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-[#593E2E] mb-2 leading-tight">
+            <span className="block">Welcome to</span>
+            <span className="block text-[#8C6954]">NextReads</span>
+          </h1>
+
+          <p className="text-lg md:text-xl text-[#684536] mb-6">
+            Discover your next favorite book.
+            <br />
+            Dive into curated selections, trending genres, and beloved authors.
+          </p>
+          {/* <Link href="/browse">
+            <button className="bg-[#593E2E] text-white px-6 py-3 rounded-lg font-semibold shadow hover:bg-[#8C6954] hover:scale-105 transition">
+              Start Browsing →
+            </button>
+          </Link> */}
+        </div>
+        <div className="hidden md:flex self-end justify-end pl-4 max-w-[300px]">
+          <img
+            src="/assets/undraw_bookshelves_2.svg"
+            alt=""
+            className="w-full h-auto object-contain opacity-80"
+            draggable={false}
+          />
+        </div>
+      </div>
+
+      {/* Books Scroller */}
       <div className="top-books-scroller w-full max-w-screen-2xl border-b-[0.5px] border-[#F2CAB3]">
         <p className="text-3xl text-[#593E2E] tracking-tight text-left my-6">
           Top Books this week
@@ -86,14 +128,15 @@ const HomePage = () => {
               books.map((book, idx) => (
                 <img
                   key={idx}
-                  src={`https:${book.fields.coverImage.fields.file.url}`} // ✅ Dodaj "https:"
+                  src={`https:${book.fields.coverImage.fields.file.url}`}
                   alt={book.fields.title}
-                  className="w-20 h-28 object-cover rounded-md shadow-md"
+                  className="w-24 h-36 object-cover rounded-lg shadow-md transition-transform hover:-translate-y-2 hover:scale-105 hover:shadow-xl"
+                  draggable={false}
                 />
               ))
             ) : (
               <p>Loading books...</p>
-            )} 
+            )}
           </div>
         </div>
       </div>
@@ -108,22 +151,38 @@ const HomePage = () => {
           <div>Loading genres...</div>
         ) : (
           <>
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {genres.slice(0, 8).map((genre: any, index: number) => (
                 <Link key={index} href={`/genres/${genre.fields.name}`}>
-                  <div className="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer">
-                    {genre.fields.name}
+                  <div className="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer flex flex-col items-center hover:shadow-lg hover:scale-105 transition group">
+                    {genre.fields.coverImage?.fields?.file?.url ? (
+                      <img
+                        src={`https:${genre.fields.coverImage.fields.file.url}`}
+                        alt={genre.fields.name}
+                        className="w-14 h-14 mb-2 object-contain select-none"
+                        loading="lazy"
+                      />
+                    ) : (
+                      <span className="text-3xl mb-2 select-none">
+                        {GENRE_ICONS[genre.fields.name] || GENRE_ICONS.default}
+                      </span>
+                    )}
+                    <span className="group-hover:text-[#8C6954] font-semibold text-lg tracking-wide">
+                      {genre.fields.name}
+                    </span>
                   </div>
                 </Link>
               ))}
             </div>
 
             {/* View All Genres aligned to the right */}
-            <div className="w-full flex justify-end mt-8">
-              <Link href="/genres">
-                <p className="text-blue-500 underline cursor-pointer">
-                  View All Genres
-                </p>
+            <div className="flex justify-end items-center mt-4 mr-2">
+              <Link
+                href="/genres"
+                className="flex items-center text-lg text-[#593E2E] hover:underline font-semibold"
+              >
+                View All Genres
+                <span className="ml-1 text-lg leading-none">→</span>
               </Link>
             </div>
           </>

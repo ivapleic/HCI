@@ -55,80 +55,83 @@ export function Navbar() {
             <Logo className="text-2xl" />
           </Link>
 
-          {isLoggedIn ? <ProfileIcon /> : 
+          {isLoggedIn ? (
+            <ProfileIcon />
+          ) : (
             <Link
               href="/auth/login"
               className="bg-[#593E2E] text-white px-3 py-1.5 rounded-md text-sm font-medium"
             >
               Login
             </Link>
-          }
+          )}
         </div>
 
         {isSearchOpen && (
           <div className="px-4 pb-2">
-            <SearchBar onSearchPath={() => {}} />
+            <SearchBar />
           </div>
         )}
 
         <div className="border-t border-gray-200 bg-white">
           <ul className="flex flex-row items-center justify-center gap-1 py-1 overflow-x-auto">
+            {/* Home je uvijek prikazan */}
+            <li>
+              <Link
+                href="/"
+                className={cn(
+                  linkStyles,
+                  pathname === "/" ? "text-[#593E2E] font-bold" : "text-gray-800"
+                )}
+              >
+                Home
+              </Link>
+            </li>
+
+            {/* Browse Books uvijek prikazan, link ovisno o login statusu */}
+            <li>
+              <button
+                type="button"
+                className={cn(
+                  linkStyles,
+                  pathname === "/browse-books"
+                    ? "text-[#593E2E] font-bold"
+                    : "text-gray-800"
+                )}
+                onClick={() => setIsBrowseDropdownOpen((v) => !v)}
+              >
+                Browse Books
+                <svg
+                  className="inline ml-1 w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth={2}
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+            </li>
+
+            {/* My Books vidljivo samo ako je logiran */}
             {isLoggedIn && (
-              <>
-                <li>
-                  <Link
-                    href="/"
-                    className={cn(
-                      linkStyles,
-                      pathname === "/" ? "text-[#593E2E] font-bold" : "text-gray-800"
-                    )}
-                  >
-                    Home
-                  </Link>
-                </li>
-
-                <li>
-                  <button
-                    type="button"
-                    className={cn(
-                      linkStyles,
-                      pathname === "/browse-books"
-                        ? "text-[#593E2E] font-bold"
-                        : "text-gray-800"
-                    )}
-                    onClick={() => setIsBrowseDropdownOpen((v) => !v)}
-                  >
-                    Browse Books
-                    <svg
-                      className="inline ml-1 w-4 h-4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </button>
-                </li>
-
-                <li>
-                  <Link
-                    href="/my-books"
-                    className={cn(
-                      linkStyles,
-                      pathname === "/my-books"
-                        ? "text-[#593E2E] font-bold"
-                        : "text-gray-800"
-                    )}
-                  >
-                    My Books
-                  </Link>
-                </li>
-              </>
+              <li>
+                <Link
+                  href="/my-books"
+                  className={cn(
+                    linkStyles,
+                    pathname === "/my-books"
+                      ? "text-[#593E2E] font-bold"
+                      : "text-gray-800"
+                  )}
+                >
+                  My Books
+                </Link>
+              </li>
             )}
           </ul>
 
@@ -173,45 +176,48 @@ export function Navbar() {
           <Logo className="text-2xl" />
         </Link>
 
-        {isLoggedIn && (
-          <ul className="flex gap-x-4">
-            <li>
-              <Link href="/">
-                <span
-                  className={cn(linkStyles, {
-                    "text-[#593E2E] border-b-2 border-[#593E2E]": pathname === "/",
-                    "text-gray-800": pathname !== "/",
-                  })}
-                >
-                  Home
-                </span>
-              </Link>
-            </li>
-
-            <li className="relative">
-              <div
-                onClick={() => setIsMegaMenuOpen((v) => !v)}
-                className="cursor-pointer"
+        <ul className="flex gap-x-4 items-center">
+          {/* Home uvijek */}
+          <li>
+            <Link href="/">
+              <span
+                className={cn(linkStyles, {
+                  "text-[#593E2E] border-b-2 border-[#593E2E]": pathname === "/",
+                  "text-gray-800": pathname !== "/",
+                })}
               >
-                <span
-                  className={cn(linkStyles, {
-                    "text-[#593E2E] border-b-2 border-[#593E2E]":
-                      pathname === "/browse-books",
-                    "text-gray-800": pathname !== "/browse-books",
-                  })}
-                >
-                  Browse Books
-                </span>
-              </div>
-              <div ref={megaMenuRef}>
-                <MegaMenu
-                  isOpen={isMegaMenuOpen}
-                  customWidth="w-screen md:w-[600px]"
-                  onClose={() => setIsMegaMenuOpen(false)}
-                />
-              </div>
-            </li>
+                Home
+              </span>
+            </Link>
+          </li>
 
+          {/* Browse Books uvijek, može pomoću isLoggedIn odrediti duljinu dropdowna*/}
+          <li className="relative">
+            <div
+              onClick={() => setIsMegaMenuOpen((v) => !v)}
+              className="cursor-pointer"
+            >
+              <span
+                className={cn(linkStyles, {
+                  "text-[#593E2E] border-b-2 border-[#593E2E]":
+                    pathname === "/browse-books",
+                  "text-gray-800": pathname !== "/browse-books",
+                })}
+              >
+                Browse Books
+              </span>
+            </div>
+            <div ref={megaMenuRef}>
+              <MegaMenu
+                isOpen={isMegaMenuOpen}
+                customWidth="w-screen md:w-[600px]"
+                onClose={() => setIsMegaMenuOpen(false)}
+              />
+            </div>
+          </li>
+
+          {/* Prikaži My Books samo ako je logiran */}
+          {isLoggedIn && (
             <li>
               <Link href="/my-books">
                 <span
@@ -225,12 +231,12 @@ export function Navbar() {
                 </span>
               </Link>
             </li>
-          </ul>
-        )}
+          )}
+        </ul>
 
         <div className="flex items-center gap-x-4">
           <div className="w-80">
-            <SearchBar onSearchPath={() => {}} />
+            <SearchBar />
           </div>
           {isLoggedIn ? (
             <ProfileIcon />

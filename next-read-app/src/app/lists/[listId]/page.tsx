@@ -1,18 +1,22 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
+import Link from "next/link";
 import { getListById } from "@/app/lists/_lib/ListApi";
 import { getAllTags } from "@/app/tags/_lib/TagsApi";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import Link from "next/link";
+import BookCard from "@/app/components/BookCard/BookCard";
 
 const ListDetailPage = () => {
   const { listId } = useParams();
-  const router = useRouter();
   const [list, setList] = useState<any>(null);
   const [tags, setTags] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Pagination state
+  const [page, setPage] = useState(1);
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchListAndTags = async () => {
@@ -23,6 +27,7 @@ const ListDetailPage = () => {
 
         if (fetchedList) {
           setList(fetchedList);
+          setPage(1); // Reset paging on new list
         }
         setTags(allTags);
       } catch (error) {
@@ -43,6 +48,19 @@ const ListDetailPage = () => {
     return <div className="text-center text-red-500 mt-12">List not found.</div>;
   }
 
+  // Pagination calculations
+  const totalPages = list.fields.books
+    ? Math.ceil(list.fields.books.length / itemsPerPage)
+    : 0;
+
+  const startIndex = (page - 1) * itemsPerPage;
+  const displayedBooks = list.fields.books?.slice(startIndex, startIndex + itemsPerPage) || [];
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
+    setPage(newPage);
+  };
+
   return (
     <div className="md:max-w-[1200px] md:mx-auto p-4 md:p-10">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
@@ -55,65 +73,57 @@ const ListDetailPage = () => {
             {list.fields.description ? documentToReactComponents(list.fields.description) : null}
           </div>
 
-          {/* Knjige u listi */}
+          {/* Knjige u listi - paginacija */}
           <div className="space-y-6">
-            {list.fields.books?.map((book: any) => (
-              <div
+            {displayedBooks.map((book: any) => (
+              <BookCard
                 key={book.sys.id}
-                className="relative flex items-start gap-3 bg-white rounded-xl p-4 shadow-md border"
-              >
-                <img
-                  onClick={() => router.push(`/books/${book.sys.id}`)}
-                  src={book.fields.coverImage?.fields.file.url}
-                  alt={book.fields.title}
-                  className="w-20 h-28 md:w-24 md:h-32 object-cover rounded-md cursor-pointer hover:opacity-80 transition flex-shrink-0"
-                />
-                <div className="flex flex-col flex-1">
-                  <Link
-                    href={`/books/${book.sys.id}`}
-                    className="text-lg md:text-xl font-semibold text-gray-900 cursor-pointer hover:text-[#593E2E] hover:underline"
-                  >
-                    {book.fields.title}
-                  </Link>
-
-                  {book.fields.author?.fields.fullName ? (
-                    <Link
-                      href={`/author/${book.fields.author.sys.id}`}
-                      className="text-[15px] text-gray-700 mt-1 mb-1 cursor-pointer hover:underline"
-                    >
-                      by {book.fields.author.fields.fullName}
-                    </Link>
-                  ) : (
-                    <p className="text-[15px] mt-1 mb-1 text-gray-700">by Unknown Author</p>
-                  )}
-
-                  <p className="text-sm text-gray-600 line-clamp-2 max-w-xl">
-                    {book.fields.description || "No description available."}
-                  </p>
-                </div>
-
-                {/* Dropdown meni */}
-                <div className="relative">
-                  <details className="dropdown">
-                    <summary className="btn bg-[#593E2E] text-white px-3 py-1 rounded-md cursor-pointer text-lg leading-none">
-                      +
-                    </summary>
-                    <ul className="dropdown-content menu p-2 shadow bg-white rounded-box w-40 mt-2 border z-10">
-                      <li>
-                        <button className="text-left w-full">Opcija 1</button>
-                      </li>
-                      <li>
-                        <button className="text-left w-full">Opcija 2</button>
-                      </li>
-                      <li>
-                        <button className="text-left w-full">Opcija 3</button>
-                      </li>
-                    </ul>
-                  </details>
-                </div>
-              </div>
+                book={{
+                  id: book.sys.id,
+                  title: book.fields.title,
+                  coverImageUrl: book.fields.coverImage?.fields.file.url,
+                  authorName: book.fields.author?.fields.fullName,
+                  authorId: book.fields.author?.sys.id,
+                  description: book.fields.description,
+                }}
+              />
             ))}
           </div>
+
+          {/* Paginacija kontrola */}
+          {totalPages > 1 && (
+            <div className="flex justify-center space-x-4 mt-6">
+              <button
+                onClick={() => handlePageChange(page - 1)}
+                disabled={page === 1}
+                className={`px-4 py-2 rounded-md ${
+                  page === 1 ? "bg-gray-300 cursor-not-allowed" : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
+                }`}
+              >
+                Previous
+              </button>
+              {[...Array(totalPages)].map((_, i) => (
+                <button
+                  key={i}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-4 py-2 rounded-md ${
+                    page === i + 1 ? "bg-[#593E2E] text-white" : "bg-gray-100 hover:bg-gray-200"
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <button
+                onClick={() => handlePageChange(page + 1)}
+                disabled={page === totalPages}
+                className={`px-4 py-2 rounded-md ${
+                  page === totalPages ? "bg-gray-300 cursor-not-allowed" : "bg-[#593E2E] text-white hover:bg-[#8C6954]"
+                }`}
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Desni sidebar s tagovima */}

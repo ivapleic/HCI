@@ -6,6 +6,7 @@ import { getGenreList } from "../_lib/genresApi";
 import { useState, useEffect } from "react";
 import { getBooks } from "../_lib/genresApi";
 import { getLists } from "@/app/lists/_lib/ListApi";
+import ItemGrid from "@/app/components/ItemGrid/ItemGrid";
 import GenresList from "@/app/components/GenresList/GenresList";
 
 export default function GenrePage() {
@@ -27,8 +28,11 @@ export default function GenrePage() {
         const genresData = await getGenreList();
         setGenres(genresData || []);
 
+        // Normalizacija za usporedbu
+        const normalizedGenreName = genreName.toLowerCase().replace(/-/g, " ");
+
         const genreData = genresData.find(
-          (g: any) => g.fields.name.toLowerCase() === genreName.toLowerCase()
+          (g: any) => g.fields.name.toLowerCase() === normalizedGenreName
         );
 
         if (!genreData) {
@@ -147,9 +151,8 @@ export default function GenrePage() {
                           );
 
                     return displayBooks.length > 0 ? (
-                      displayBooks
-                        .slice(0, 10)
-                        .map((book: any, idx: number) => (
+                      <>
+                        {displayBooks.slice(0, 3).map((book: any) => (
                           <Link
                             href={`/books/${book.sys.id}`}
                             key={book.sys.id}
@@ -160,7 +163,22 @@ export default function GenrePage() {
                               className="object-cover rounded-md aspect-[0.7] w-[90px] md:w-auto cursor-pointer"
                             />
                           </Link>
-                        ))
+                        ))}
+
+                        {displayBooks.length > 10 && (
+                          <div className="flex justify-end mt-2 col-span-3 md:col-span-5">
+                            <Link
+                              href={`/new-releases?genre=${genreName}`}
+                              className="text-sm text-[#593E2E] hover:underline flex items-center"
+                            >
+                              More new releases from this genre
+                              <span className="ml-1 text-lg leading-none">
+                                →
+                              </span>
+                            </Link>
+                          </div>
+                        )}
+                      </>
                     ) : (
                       <p className="text-center text-gray-600 col-span-3 md:col-span-5">
                         No recent releases
@@ -177,45 +195,30 @@ export default function GenrePage() {
                     Lists with this genre
                   </Link>
                 </h2>
-                {filteredLists.length > 0 ? (
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    {filteredLists.slice(0, 4).map((list, index) => (
-                      <Link
-                        key={index}
-                        href={`/lists/${list.sys.id}`}
-                        className="group"
-                      >
-                        <div className="w-full bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col items-center transition-all duration-200 hover:shadow-lg">
-                          {/* Slike knjiga u listi */}
-                          <div className="flex gap-2 mb-2 justify-start flex-wrap">
-                            {list.fields.books?.length > 0 ? (
-                              list.fields.books
-                                .slice(0, 3)
-                                .map((book: any, idx: number) => (
-                                  <img
-                                    key={idx}
-                                    src={
-                                      book.fields.coverImage?.fields.file.url
-                                    }
-                                    alt={book.fields.title}
-                                    className="object-cover rounded-md shadow-md w-20 h-28"
-                                  />
-                                ))
-                            ) : (
-                              <p className="text-sm text-gray-400">
-                                No books available
-                              </p>
-                            )}
-                          </div>
 
-                          {/* Naslov liste */}
-                          <h3 className="text-center text-[15px] font-bold text-gray-900 mt-1 group-hover:text-[#8c6954] transition-colors duration-200">
-                            {list.fields.name}
-                          </h3>
-                        </div>
-                      </Link>
-                    ))}
-                  </div>
+                {filteredLists.length > 0 ? (
+                  <>
+                    <ItemGrid
+                      items={filteredLists}
+                      itemType="lists"
+                      maxDisplay={6}
+                      columns={2}
+                      moreLink={`/tags/${genreName.toLowerCase()}`}
+                      moreLabel="More lists with this genre"
+                      title="" 
+                    />
+                    {filteredLists.length > 6 && (
+                      <div className="flex justify-end mt-2">
+                        <Link
+                          href={`/tags/${genreName.toLowerCase()}`}
+                          className="text-sm text-[#593E2E] hover:underline flex items-center"
+                        >
+                          More lists from this genre
+                          <span className="ml-1 text-lg leading-none">→</span>
+                        </Link>
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <p className="text-gray-600 mt-2">
                     No lists available for this genre.
@@ -232,20 +235,35 @@ export default function GenrePage() {
                 </h2>
                 <div className="grid grid-cols-3 md:grid-cols-5 gap-4">
                   {books.length > 0 ? (
-                    books.slice(0, 15).map((book) => (
-                      <Link href={`/books/${book.sys.id}`} key={book.sys.id}>
-                        <img
-                          src={book.fields.coverImage.fields.file.url}
-                          alt={book.fields.title}
-                          className="object-cover rounded-md aspect-[0.7] w-[90px] md:w-auto cursor-pointer"
-                        />
-                      </Link>
-                    ))
+                    <>
+                      {books.slice(0, 15).map((book) => (
+                        <Link href={`/books/${book.sys.id}`} key={book.sys.id}>
+                          <img
+                            src={book.fields.coverImage.fields.file.url}
+                            alt={book.fields.title}
+                            className="object-cover rounded-md aspect-[0.7] w-[90px] md:w-auto cursor-pointer"
+                          />
+                        </Link>
+                      ))}
+
+                      {books.length > 15 && (
+                        <div className="flex justify-end mt-2 col-span-3 md:col-span-5">
+                          <Link
+                            href={`/books?genre=${genreName}`}
+                            className="text-sm text-[#593E2E] hover:underline flex items-center"
+                          >
+                            More books from this genre
+                            <span className="ml-1 text-lg leading-none">→</span>
+                          </Link>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <p className="text-gray-600">No books available.</p>
                   )}
                 </div>
               </div>
+
             </div>
 
             {/* Right div - genres list sidebar */}

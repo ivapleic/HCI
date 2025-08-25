@@ -57,7 +57,10 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(event.target as Node)
+      ) {
         setShowDropdown(false);
       }
     }
@@ -87,20 +90,30 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
             handleSearch();
           }
         }}
-        className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#593E2E]"
+        className="w-full rounded-lg border border-white bg-[#F9F3EE] px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#593E2E] hover:border-[#593E2E]"
         aria-label="Search books or authors"
       />
       <button
         onClick={handleSearch}
-        className="absolute top-2 right-2 text-gray-600 hover:text-[#593E2E]"
+        className="absolute top-1/2 right-2 transform -translate-y-1/2 p-1 rounded cursor-pointer hover:text-[#593E2E] hover:border hover:border-[#593E2E] transition-colors"
         aria-label="Search"
+        type="button"
       >
-        🔍
+        <img
+          src="/assets/icons8-search-30.png"
+          alt="Search"
+          width={24}
+          height={24}
+          draggable={false}
+          className="w-6 h-6"
+        />
       </button>
 
       {showDropdown && query.trim() && (
         <ul className="absolute z-50 mt-1 w-full bg-white border border-gray-300 rounded shadow-lg max-h-80 overflow-auto p-0">
-          {loading && <li className="p-2 text-center text-gray-500">Loading...</li>}
+          {loading && (
+            <li className="p-2 text-center text-gray-500">Loading...</li>
+          )}
           {!loading && results.length === 0 && (
             <li className="p-2 text-center text-gray-500">No results found</li>
           )}
@@ -110,7 +123,8 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                 item.type === "book"
                   ? (item as BookSearchResultItem).imageUrl || PLACEHOLDER_IMG
                   : item.type === "author"
-                  ? (item as AuthorSearchResultItem).profileImageUrl || PLACEHOLDER_IMG
+                  ? (item as AuthorSearchResultItem).profileImageUrl ||
+                    PLACEHOLDER_IMG
                   : PLACEHOLDER_IMG;
 
               return (
@@ -129,8 +143,9 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                       className="w-12 h-12 object-cover rounded shadow"
                     />
                     <div className="flex flex-col">
-                      <span className="font-semibold text-[#593E2E]">{item.title}</span>
-                      {/* Prikaz autora samo ako postoji authorName */}
+                      <span className="font-semibold text-[#593E2E]">
+                        {item.title}
+                      </span>
                       {"authorName" in item && item.authorName && (
                         <span className="text-sm text-gray-600">
                           by {item.authorName}

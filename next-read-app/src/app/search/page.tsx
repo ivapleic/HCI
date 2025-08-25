@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import SearchBar from "../components/SearchBar/SearchBar";
 import BookCard from "../components/BookCard/BookCard";
 import AuthorCard from "../components/AuthorCard/AuthorCard";
+import Pagination from "../components/Pagination/Pagination"; // tvoja Pagination komponenta
 import { searchBooksAuthorsSeriesLists, SearchResultItem } from "./_lib/SearchApi";
 
 export default function SearchPage() {
@@ -24,7 +25,7 @@ export default function SearchPage() {
         return;
       }
       setLoading(true);
-      const r = await searchBooksAuthorsSeriesLists(query, 100); // dovoljno za paginaciju
+      const r = await searchBooksAuthorsSeriesLists(query, 100);
       setResults(r);
       setLoading(false);
       setCurrentPage(1);
@@ -32,18 +33,16 @@ export default function SearchPage() {
     fetchResults();
   }, [query]);
 
-  // Paginacija
   const indexOfLastResult = currentPage * resultsPerPage;
   const indexOfFirstResult = indexOfLastResult - resultsPerPage;
   const currentResults = results.slice(indexOfFirstResult, indexOfLastResult);
-  const totalPages = Math.ceil(results.length / resultsPerPage);
 
   function handlePageChange(newPage: number) {
     setCurrentPage(newPage);
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 bg-white rounded-lg shadow-lg my-8">
       <SearchBar className="mb-6" />
 
       {loading && <p>Loading results...</p>}
@@ -59,7 +58,7 @@ export default function SearchPage() {
                   title: item.title,
                   coverImageUrl: (item as any).imageUrl,
                   authorName: item.authorName,
-                  authorId: (item as any).authorId, // <-- SAD DODANO
+                  authorId: (item as any).authorId,
                   description: (item as any).description,
                 }}
               />
@@ -77,26 +76,12 @@ export default function SearchPage() {
         ))}
       </ul>
 
-      {totalPages > 1 && (
-        <div className="flex justify-center mt-8 space-x-2">
-          {[...Array(totalPages)].map((_, i) => {
-            const pageNumber = i + 1;
-            return (
-              <button
-                key={pageNumber}
-                onClick={() => handlePageChange(pageNumber)}
-                className={`px-4 py-2 rounded ${
-                  currentPage === pageNumber
-                    ? "bg-[#593E2E] text-white"
-                    : "bg-gray-200 text-gray-700 hover:bg-[#8B6E54] hover:text-white"
-                }`}
-              >
-                {pageNumber}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      <Pagination
+        totalItems={results.length}
+        itemsPerPage={resultsPerPage}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </div>
   );
 }

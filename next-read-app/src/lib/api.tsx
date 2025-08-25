@@ -1,7 +1,6 @@
 import contentfulClient from "./contentfulClient";
 import { Entry } from "contentful";
 
-
 import {
   TypeGenreSkeleton,
   TypeListSkeleton,
@@ -20,7 +19,6 @@ export const getGenreList = async (): Promise<Entry<TypeGenreSkeleton, "WITHOUT_
     return []; // Return empty array on error
   }
 };
-
 
 export const getGenreById = async (genreId: string) => {
   try {
@@ -78,4 +76,5 @@ export const GetAuthorById = async (authorId: string) => {
     return null;
   }
 };
+
 

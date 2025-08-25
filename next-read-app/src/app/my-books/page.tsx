@@ -5,6 +5,7 @@ import {
   getWantToReadByUserId,
   getCurrentlyReadingBookByUserId,
   getReadBooksByUserId,
+  getFavouritesByUserId
 } from "../my-books/_lib/MyBooksApi";
 
 // BookCard komponenta za prikaz svake knjige u listama
@@ -69,13 +70,15 @@ const BookCard = ({
         )}
 
         {type === "read" ? (
-          <button className="mt-3 py-1 px-3 text-xs border rounded hover:bg-gray-50 transition">
-            Write A Review
-          </button>
+          // <button className="mt-3 py-1 px-3 text-xs border rounded hover:bg-gray-50 transition">
+          //   Write A Review
+          // </button>
+            <></>
         ) : (
-          <button className="mt-3 py-1 px-3 text-xs border rounded hover:bg-gray-50 transition">
-            Update Progress
-          </button>
+           <button className="mt-3 py-1 px-3 text-xs border rounded hover:bg-gray-50 transition">
+             Update Progress
+           </button>
+        
         )}
       </div>
     </div>
@@ -86,6 +89,8 @@ export default function MyBooks() {
   const [wantToRead, setWantToRead] = useState<any[]>([]);
   const [currentlyReading, setCurrentlyReading] = useState<any[]>([]);
   const [readBooks, setReadBooks] = useState<any[]>([]);
+  const [favourites, setFavourites] = useState<any[]>([]);
+
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState<string | null>(null);
 
@@ -107,23 +112,26 @@ export default function MyBooks() {
     setUserId(id);
   }, []);
 
-  useEffect(() => {
+useEffect(() => {
     if (!userId) return;
 
     async function fetchBooks() {
       setLoading(true);
-      const [want, reading, read] = await Promise.all([
+      const [want, reading, read, favs] = await Promise.all([
         getWantToReadByUserId(userId!),
         getCurrentlyReadingBookByUserId(userId!),
         getReadBooksByUserId(userId!),
+        getFavouritesByUserId(userId!),
       ]);
       setWantToRead(want || []);
       setCurrentlyReading(reading ? [reading] : []);
       setReadBooks(read || []);
+      setFavourites(favs || []);
       setLoading(false);
     }
     fetchBooks();
   }, [userId]);
+
 
   // Pagination slices
   const indexLastWant = currentPageWant * booksPerPage;
@@ -204,81 +212,89 @@ export default function MyBooks() {
     );
   };
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 py-4">
-      <h1 className="text-3xl font-bold mb-8 text-[#593E2E]">Bookshelves</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
-        {/* Want To Read */}
-        <div className="bg-[#F9F6F3] rounded-xl p-5 shadow border">
-          <h2 className="flex items-center gap-2 font-semibold text-base mb-4">
-            <span className="inline-block rounded-full bg-[#EEE3D2] px-2 py-1 text-xs font-bold text-[#87715A]">
-              Want To Read
-            </span>
-          </h2>
-          <button className="w-full py-2 mb-5 rounded border bg-white text-[#87715A] font-semibold hover:bg-[#F0EADD] transition">
-            + Add A New Book
-          </button>
-          <div>
-            {wantToRead.length === 0 && (
-              <div className="text-gray-400 text-sm italic">
-                Nothing here yet…
-              </div>
-            )}
-            {currentWantToRead.map((book: any) => (
-              <BookCard key={book.sys.id} book={book} type="want" />
-            ))}
-          </div>
-          <Pagination
-            totalPages={totalPagesWant}
-            currentPage={currentPageWant}
-            onPageChange={setCurrentPageWant}
-          />
+return (
+  <div className="max-w-7xl mx-auto px-4 py-4">
+    <h1 className="text-3xl font-bold mb-8 text-[#593E2E]">Bookshelves</h1>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-7">
+      {/* Want To Read (lijevo) */}
+      <div className="bg-[#F9F6F3] rounded-xl p-5 shadow border">
+        <h2 className="flex items-center gap-2 font-semibold text-base mb-4">
+          <span className="inline-block rounded-full bg-[#EEE3D2] px-2 py-1 text-xs font-bold text-[#87715A]">
+            Want To Read
+          </span>
+        </h2>
+        {/* <button className="w-full py-2 mb-5 rounded border bg-white text-[#87715A] font-semibold hover:bg-[#F0EADD] transition">
+          + Add A New Book
+        </button> */}
+        <div>
+          {wantToRead.length === 0 && (
+            <div className="text-gray-400 text-sm italic">Nothing here yet…</div>
+          )}
+          {currentWantToRead.map((book: any) => (
+            <BookCard key={book.sys.id} book={book} type="want" />
+          ))}
         </div>
-        {/* Currently Reading */}
-        <div className="bg-[#F6FAF6] rounded-xl p-5 shadow border">
+        <Pagination
+          totalPages={totalPagesWant}
+          currentPage={currentPageWant}
+          onPageChange={setCurrentPageWant}
+        />
+      </div>
+
+      {/* Favourites (sredina) */}
+      <div className="bg-[#F3F6FA] rounded-xl p-5 shadow border">
+        <h2 className="flex items-center gap-2 font-semibold text-base mb-4">
+          <span className="inline-block rounded-full bg-[#D6E3F3] px-2 py-1 text-xs font-bold text-[#6A7BA3]">
+            Favourites
+          </span>
+        </h2>
+        {/* <button className="w-full py-2 mb-5 rounded border bg-white text-[#6A7BA3] font-semibold hover:bg-[#E3EDFA] transition">
+          + Add A New Book
+        </button> */}
+        <div>
+          {favourites.length === 0 && (
+            <div className="text-gray-400 text-sm italic">No favourites yet.</div>
+          )}
+          {favourites.map((book: any) => (
+            <BookCard key={book.sys.id} book={book} type="read" />
+          ))}
+        </div>
+      </div>
+
+      {/* Currently Reading + Read (desno) */}
+      <div className="bg-[#F6FAF6] rounded-xl p-5 shadow border flex flex-col gap-2">
+        <div>
           <h2 className="flex items-center gap-2 font-semibold text-base mb-4">
             <span className="inline-block rounded-full bg-[#DBF1DD] px-2 py-1 text-xs font-bold text-[#599C66]">
               Currently Reading
             </span>
           </h2>
-          <button className="w-full py-2 mb-5 rounded border bg-white text-[#599C66] font-semibold hover:bg-[#E6F0E6] transition">
+          {/* <button className="w-full py-2 mb-5 rounded border bg-white text-[#599C66] font-semibold hover:bg-[#E6F0E6] transition">
             + Add A New Book
-          </button>
+          </button> */}
           <div>
-            {currentlyReading.length === 0 && (
-              <div className="text-gray-400 text-sm italic">
-                Nothing here yet…
-              </div>
+            {currentlyReading.length === 0 ? (
+              <div className="text-gray-400 text-sm italic">Nothing here yet…</div>
+            ) : (
+              currentCurrentlyReading.map((book: any) => (
+                <BookCard key={book.sys.id} book={book} type="reading" />
+              ))
             )}
-            {currentCurrentlyReading.map((book: any) => (
-              <BookCard key={book.sys.id} book={book} type="reading" />
-            ))}
           </div>
-          <Pagination
-            totalPages={totalPagesReading}
-            currentPage={currentPageReading}
-            onPageChange={setCurrentPageReading}
-          />
         </div>
-        {/* Read */}
-        <div className="bg-[#F3F6FA] rounded-xl p-5 shadow border">
-          <h2 className="flex items-center gap-2 font-semibold text-base mb-4">
-            <span className="inline-block rounded-full bg-[#D6E3F3] px-2 py-1 text-xs font-bold text-[#6A7BA3]">
-              Read
-            </span>
-          </h2>
-          <button className="w-full py-2 mb-5 rounded border bg-white text-[#6A7BA3] font-semibold hover:bg-[#E3EDFA] transition">
-            + Add A New Book
-          </button>
+
+        <div className="mt-6 pt-4 border-t border-gray-300">
+          <h3 className="text-sm font-semibold text-[#599C66] mb-2">Read</h3>
           <div>
-            {readBooks.length === 0 && (
+            {currentReadBooks.length === 0 ? (
               <div className="text-gray-400 text-sm italic">
-                Nothing here yet…
+                You have not read any books yet.
               </div>
+            ) : (
+              currentReadBooks.map((book: any) => (
+                <BookCard key={book.sys.id} book={book} type="read" />
+              ))
             )}
-            {currentReadBooks.map((book: any) => (
-              <BookCard key={book.sys.id} book={book} type="read" />
-            ))}
           </div>
           <Pagination
             totalPages={totalPagesRead}
@@ -288,5 +304,6 @@ export default function MyBooks() {
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 }
