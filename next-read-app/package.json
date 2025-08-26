@@ -24,7 +24,12 @@
     "react-star-ratings": "^2.3.0",
     "react-toastify": "^11.0.5",
     "tailwind-merge": "^2.5.5",
-    "tailwindcss": "^3.4.17"
+    "tailwindcss": "^3.4.17",
+     "@types/node": "^20.19.11",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "typescript": "^5.9.2"
+
   },
   "devDependencies": {
     "@types/node": "^20.19.11",
@@ -33,5 +38,6 @@
     "eslint": "^8",
     "eslint-config-next": "15.0.2",
     "typescript": "^5.9.2"
+
   }
 }
