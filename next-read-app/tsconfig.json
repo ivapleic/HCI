@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/auth/register", "src/components/auth/register", ".next/types/app/page.tsx", ".next/types/app/auth/login/page.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/components/auth/register", "src/components/auth/register", ".next/types/app/page.tsx", ".next/types/app/auth/login/page.tsx", "next.config.js"],
   "exclude": ["node_modules"]
 }
