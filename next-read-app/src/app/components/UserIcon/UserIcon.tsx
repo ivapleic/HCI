@@ -6,12 +6,10 @@ import Link from "next/link";
 import { useAuth } from "../../../lib/AuthContext";
 
 const ProfileIcon = () => {
-  const { user, logout } = useAuth(); // koristimo logout iz konteksta
+  const { user, logout } = useAuth();
   const router = useRouter();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-
-  if (!user || !user.id) return null;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -26,6 +24,8 @@ const ProfileIcon = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if (!user || !user.id) return null;
+
   const handleLogout = () => {
     logout();
     setDropdownOpen(false);
@@ -35,7 +35,7 @@ const ProfileIcon = () => {
   const initials = user.fullName
     ? user.fullName
         .split(" ")
-        .map((w) => w[0])
+        .map((w) => w)
         .join("")
         .toUpperCase()
     : "?";

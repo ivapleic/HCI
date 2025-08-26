@@ -38,7 +38,7 @@ const BooksPage = () => {
         }
 
         // Za svaku knjigu dohvatiti autora
-        for (let book of fetchedBooks) {
+        for (const book of fetchedBooks) {
           if (book.fields.author) {
             const author = await GetAuthorById(book.fields.author.sys.id); // Dohvati autora na temelju ID-a
             book.fields.authorDetails = author; // Dodaj detalje autora u knjigu

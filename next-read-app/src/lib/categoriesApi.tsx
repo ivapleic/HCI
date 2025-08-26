@@ -41,7 +41,7 @@ export async function addBookToUserCategory(
       };
     } else {
       // Polja su nizovi linkova
-      let currentBooks: any[] = Array.isArray(userEntry.fields[contentfulField]?.["en-US"])
+      const currentBooks: any[] = Array.isArray(userEntry.fields[contentfulField]?.["en-US"])
         ? userEntry.fields[contentfulField]["en-US"]
         : [];
 

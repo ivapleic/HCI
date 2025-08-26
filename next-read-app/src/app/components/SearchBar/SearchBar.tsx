@@ -163,7 +163,7 @@ export default function SearchBar({ className = "" }: SearchBarProps) {
                 handleSearch();
               }}
             >
-              Show all results for "{query}"
+              Show all results for &quot{query}&quot
             </li>
           )}
         </ul>

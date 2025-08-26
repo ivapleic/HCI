@@ -3,7 +3,7 @@ export default function ContactPage() {
     <main className="max-w-4xl mx-auto p-8">
       <h1 className="text-4xl font-bold mb-4 text-[#593E2E]">Contact Us</h1>
       <p className="text-lg leading-relaxed text-[#684536] mb-4">
-        We'd love to hear from you! Reach out with questions, suggestions, or feedback.
+        We&aposd love to hear from you! Reach out with questions, suggestions, or feedback.
       </p>
       <form className="space-y-4 max-w-md">
         <label className="block">
